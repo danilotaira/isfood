@@ -1,0 +1,2 @@
+executar docker compose
+

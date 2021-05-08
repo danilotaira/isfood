@@ -1,0 +1,38 @@
+version: '3.7'
+services:
+  postgresdb:
+    image: postgres:latest
+    volumes:
+      - "./basedados/:/var/lib/postgresql/data"
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=isfood
+    restart: always
+    container_name: postgresdb
+    ports:
+      - 5431:5432
+    networks:
+      - postgres-network
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin4
+    volumes:
+      - "./pgadmin:/var/lib/pgadmin"
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=danilo.rcte@gmail.com
+      - PGADMIN_DEFAULT_PASSWORD=@dm102030!
+    restart: always      
+    ports:
+      - 15432:80
+    depends_on:
+      - postgresdb
+    networks:
+      - postgres-network
+
+networks:
+  postgres-network:
+    driver: bridge
+
+
