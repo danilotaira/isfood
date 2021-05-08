@@ -97,7 +97,7 @@ public class DatabaseCleaner {
 	private void addTruncateSatements( List<String> tableNames, Statement statement ) {
 		tableNames.forEach(tableName -> {
 			try {
-				statement.addBatch(sql("TRUNCATE TABLE " + tableName + " cascade "));
+				statement.addBatch(sql("TRUNCATE TABLE " + tableName + " RESTART IDENTITY cascade"));
 			} catch (SQLException e) {
 				throw new RuntimeException(e);
 			}

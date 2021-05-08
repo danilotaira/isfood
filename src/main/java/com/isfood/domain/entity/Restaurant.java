@@ -26,8 +26,6 @@ import javax.validation.groups.Default;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.isfood.core.validation.Groups;
 import com.isfood.core.validation.TaxShipping;
 import com.isfood.core.validation.ValueZeroIncludeDescription;
@@ -61,38 +59,31 @@ public class Restaurant {
 //    @Multiple(number = 5)
     private BigDecimal taxShipping;
 
-//    @JsonIgnore
     @Valid
     @ConvertGroup(from = Default.class, to = Groups.KitchenId.class)
     @NotNull
-    @JsonIgnoreProperties("hibernateLazyInitializer")
     @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn(name = "kitchen_id", nullable = false)
 //    @OnDelete(action = OnDeleteAction.CASCADE)
     private Kitchen kitchen;
 
-    @JsonIgnore
     @ManyToMany
 //    @JoinTable (name = "restaurante_forma_pagamento",
 //              joinColumns = @JoinColumn(name = "restaurante_id"),
 //              inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
     private List<FormOfPayment> formOfPayments = new ArrayList<>();
 
-    @JsonIgnore
     @Embedded
     private Address address;
 
-    @JsonIgnore
     @CreationTimestamp
     @Column( nullable = false, columnDefinition = "timestamp with time zone")
     private LocalDateTime dateCreated;
 
-    @JsonIgnore
     @UpdateTimestamp
     @Column( nullable = false, columnDefinition = "timestamp with time zone")
     private LocalDateTime dateModified;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "restaurant")
     private List<Product> products = new ArrayList<>();
 }

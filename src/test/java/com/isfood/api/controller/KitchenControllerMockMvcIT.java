@@ -1,9 +1,8 @@
 package com.isfood.api.controller;
 
 import static com.isfood.core.utils.JsonConvertionUtils.asJsonString;
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.is;
-import static org.mockito.Mockito.when;
+import static org.hamcrest.Matchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -12,9 +11,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
@@ -24,20 +22,14 @@ import com.isfood.domain.entity.Kitchen;
 import com.isfood.domain.service.RegisterKitchenService;
 import com.isfood.utils.DatabaseCleaner;
 
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
-
-//@WebMvcTest
-@SpringBootTest	(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-//@ExtendWith(MockitoExtension.class)
+@SpringBootTest	()
+@AutoConfigureMockMvc
 @TestPropertySource("/application-test.properties")
-public class KitchenControllerIT {
-	
-	@LocalServerPort
-	private int port;
+public class KitchenControllerMockMvcIT {
 	
 	private static final String URL_KITCHENS = "/kitchens";
-
+	
+	@Autowired
 	private MockMvc mockMvc;
 	
 	Kitchen kitchen;
@@ -55,41 +47,26 @@ public class KitchenControllerIT {
     void setUp() {  
     	kitchen = new Kitchen();
     	kitchen.setName("test");
-    	databaseCleaner.clearTables();
-        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-        RestAssured.port = port;
-        RestAssured.basePath = URL_KITCHENS;
+    	databaseCleaner.clearTables();    	
+    	prepareData();
     }
     
 	@Test
 	public void whenGETListWitchKitchensIsCalled_ThenOkStatusIsReturned() throws Exception{
-        given()
-        	.accept(ContentType.JSON)
-        .when()
-        	.get()
-        .then()
-        	.statusCode(HttpStatus.OK.value());
+        mockMvc.perform(MockMvcRequestBuilders.get(URL_KITCHENS)
+        		.accept(MediaType.APPLICATION_JSON))
+        		.andDo(print())
+        		.andExpect(status().isOk())	
+        		.andExpect(content().contentType(MediaType.APPLICATION_JSON))        		
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].id", is(notNullValue())))
+                .andExpect(jsonPath("$[0]").value(hasKey("name")));
         
 	}
 	
 	@Test
-	public void whenPOSTIsCalled_ThenAKitchenIsCreated() throws Exception{
-        given()
-        	.body(asJsonString(kitchen))
-        	.contentType(ContentType.JSON)
-        	.accept(ContentType.JSON)
-        .when()
-        	.post()
-        .then()
-        	.statusCode(HttpStatus.CREATED.value());
-	}	
-	
-	@Test
-	public void whenPOSTIsCalled_ThenAKitchenIsCreateds() throws Exception{
-        //when
-        when(registerKitchenService.save(kitchen)).thenReturn(kitchen);
-
-        // then
+	public void whenPOSTIsCalled_ThenAKitchenIsCreated() throws Exception{				
         mockMvc.perform(MockMvcRequestBuilders.post(URL_KITCHENS)
         		.accept(MediaType.APPLICATION_JSON)
         		.contentType(MediaType.APPLICATION_JSON)
@@ -97,8 +74,18 @@ public class KitchenControllerIT {
         		.andExpect(status().isCreated())	
         		.andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.name", is(kitchen.getName())));
-	}		
+	}	
 	
+	@Test
+	public void whenPOSTIsCalled_ThenAKitchenIsCreateds() throws Exception{
+        mockMvc.perform(MockMvcRequestBuilders.post(URL_KITCHENS)
+        		.accept(MediaType.APPLICATION_JSON)
+        		.contentType(MediaType.APPLICATION_JSON)
+        		.content(asJsonString(kitchen)))     
+        		.andExpect(status().isCreated())	
+        		.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.name", is(kitchen.getName())));
+	}			
 	
     public void prepareData() {
    	 

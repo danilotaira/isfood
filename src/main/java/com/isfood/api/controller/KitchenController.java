@@ -22,7 +22,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.isfood.api.model.KitchensXmlWrapper;
 import com.isfood.domain.entity.Kitchen;
-import com.isfood.domain.repository.KitchenRepository;
 import com.isfood.domain.service.RegisterKitchenService;
 
 @RestController
