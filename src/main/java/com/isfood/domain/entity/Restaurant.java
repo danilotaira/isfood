@@ -48,20 +48,16 @@ public class Restaurant {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
     
-    @NotBlank
     @Column(nullable = false)
     private String name;
    
-    @TaxShipping
-    @PositiveOrZero
 	/* @PositiveOrZero(groups = Groups.RegisterRestaurant.class) */
     @Column(name="tax_shipping", nullable = false)
 //    @Multiple(number = 5)
     private BigDecimal taxShipping;
+    
+    private Boolean active = Boolean.TRUE;
 
-    @Valid
-    @ConvertGroup(from = Default.class, to = Groups.KitchenId.class)
-    @NotNull
     @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn(name = "kitchen_id", nullable = false)
 //    @OnDelete(action = OnDeleteAction.CASCADE)

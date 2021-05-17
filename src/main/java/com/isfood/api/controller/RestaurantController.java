@@ -102,6 +102,18 @@ public class RestaurantController {
             throw new ControllerException(e.getMessage(), e);
         }
     }
+    
+    @PutMapping("/{restaurantID}/activate")
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    public void activate(@PathVariable Long restaurantID) {
+    	registerRestaurantService.activate(restaurantID);
+    }
+    
+    @DeleteMapping("/{restaurantID}/desactivate")
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    public void  deactivate(@PathVariable Long restaurantID) {
+    	registerRestaurantService.deactivate(restaurantID);
+    }    
 
     @PatchMapping("/{restaurantId}")
     public ResponseEntity<?> updatePartial(@PathVariable Long restaurantId,

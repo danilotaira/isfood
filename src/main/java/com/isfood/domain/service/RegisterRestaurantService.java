@@ -1,5 +1,7 @@
 package com.isfood.domain.service;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -43,6 +45,18 @@ public class RegisterRestaurantService {
         }
 
     }
+    
+    @Transactional
+    public void activate(Long restaurantId) {
+    	Restaurant restaurantActual = findOrFail(restaurantId);
+    	restaurantActual.setActive(true);
+    }
+    
+    @Transactional
+    public void deactivate(Long restaurantId) {
+    	Restaurant restaurantActual = findOrFail(restaurantId);
+    	restaurantActual.setActive(false);
+    }    
 
     public Restaurant update(Long id, Restaurant restaurant){
         Restaurant restaurantBefore = this.findOrFail(id);

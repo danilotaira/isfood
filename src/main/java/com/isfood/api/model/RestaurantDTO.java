@@ -28,6 +28,8 @@ public class RestaurantDTO {
     @PositiveOrZero	
 	private BigDecimal taxShipping;
     
+    private Boolean active;
+    
     @Valid
     @NotNull
     @ConvertGroup(from = Default.class, to = Groups.KitchenId.class)

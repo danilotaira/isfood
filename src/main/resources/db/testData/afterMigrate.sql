@@ -42,10 +42,10 @@ insert into permission (id, name, description) values (2, 'EDIT_KITCHENS', 'Allo
 ALTER SEQUENCE permission_id_seq RESTART WITH 3;
 
 ALTER SEQUENCE restaurant_id_seq RESTART WITH 1;
-insert into restaurant (name, tax_shipping, kitchen_id, date_created, date_modified, address_cep, address_complement, address_district, address_number, address_public_place, address_city_id) values ('New Flavor', 5.2, 1, current_timestamp, current_timestamp,'03518-040', 'casa', 'jd fernandes', 193, 'rua canhamo do canada', 3);
-insert into restaurant (name, tax_shipping, kitchen_id, date_created, date_modified) values ('Taj Mahal Palace', 4.3, 2, current_timestamp, current_timestamp);
-insert into restaurant (name, tax_shipping, kitchen_id, date_created, date_modified) values ('Brazilian Party', 9.9, 3, current_timestamp, current_timestamp);
-insert into restaurant (name, tax_shipping, kitchen_id, date_created, date_modified) values ('Sujinho', 12.1, 3, current_timestamp, current_timestamp);
+insert into restaurant (name, tax_shipping, kitchen_id, date_created, date_modified, address_cep, address_complement, address_district, address_number, address_public_place, address_city_id, active) values ('New Flavor', 5.2, 1, current_timestamp, current_timestamp,'03518-040', 'casa', 'jd fernandes', 193, 'rua canhamo do canada', 3, true);
+insert into restaurant (name, tax_shipping, kitchen_id, date_created, date_modified, active) values ('Taj Mahal Palace', 4.3, 2, current_timestamp, current_timestamp,true);
+insert into restaurant (name, tax_shipping, kitchen_id, date_created, date_modified, active) values ('Brazilian Party', 9.9, 3, current_timestamp, current_timestamp,true);
+insert into restaurant (name, tax_shipping, kitchen_id, date_created, date_modified, active) values ('Sujinho', 12.1, 3, current_timestamp, current_timestamp,true);
 
 ALTER SEQUENCE product_id_seq RESTART WITH 1;
 insert into product (name, description, price, restaurant_id) values ('Italian Bread', 'Italian Bread perfect, very good', 3.9, 3);
