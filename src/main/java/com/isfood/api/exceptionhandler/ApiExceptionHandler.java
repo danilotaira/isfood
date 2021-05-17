@@ -1,6 +1,6 @@
 package com.isfood.api.exceptionhandler;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -274,6 +274,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 
 	private Problem.ProblemBuilder createProblemBuilder( HttpStatus status, ProblemType problemType, String detail, String userMessage) {
 		return Problem.builder().status(status.value()).type(problemType.getUri()).title(problemType.getTitle())
-				.detail(detail).userMessage(userMessage).timestamp(LocalDateTime.now());
+				.detail(detail).userMessage(userMessage).timestamp(OffsetDateTime.now());
 	}	
 }

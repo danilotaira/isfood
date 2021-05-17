@@ -2,6 +2,7 @@ package com.isfood.api.controller;
 
 import static com.isfood.core.utils.JsonConvertionUtils.asJsonString;
 import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -23,6 +24,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
+import com.isfood.api.assembler.KitchenDTOAssembler;
+import com.isfood.api.assembler.KitchenDTODisassembler;
+import com.isfood.api.model.KitchenDTO;
 import com.isfood.domain.entity.Kitchen;
 import com.isfood.domain.service.RegisterKitchenService;
 
@@ -37,9 +41,16 @@ public class KitchenControllerTest {
 	private MockMvc mockMvc;
 	
 	Kitchen kitchen = new Kitchen();
+	KitchenDTO kitchenDTO = new KitchenDTO();
 	
 	@Mock
 	private RegisterKitchenService registerKitchenService;
+	
+	@Mock
+	private KitchenDTOAssembler kitchenDTOAssembler;	
+	
+	@Mock
+	private KitchenDTODisassembler kitchenDTODisassembler;		
 	
 	@InjectMocks
     private KitchenController kitchenController;
@@ -47,10 +58,14 @@ public class KitchenControllerTest {
     @BeforeEach
     void setUp() {  
     	kitchen.setName("test");
+    	kitchen.setId(1L);
         mockMvc = MockMvcBuilders.standaloneSetup(kitchenController)
                 .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
                 .setViewResolvers((s, locale) -> new MappingJackson2JsonView())                   
-                .build();      
+                .build();    
+        kitchenDTO.setId(1L);
+        kitchenDTO.setName("test");
+        
     }
 	
 	@Test
@@ -60,7 +75,8 @@ public class KitchenControllerTest {
 
         //when
         when(registerKitchenService.findAll()).thenReturn(Collections.singletonList(kitchen));
-
+        when(kitchenDTOAssembler.toCollectionDTO(Collections.singletonList(kitchen))).thenReturn(Collections.singletonList(kitchenDTO));
+        
         // then
         mockMvc.perform(MockMvcRequestBuilders.get(URL_KITCHENS)
         		.accept(MediaType.APPLICATION_JSON))              
@@ -73,7 +89,10 @@ public class KitchenControllerTest {
 	@Test
 	public void whenPOSTIsCalled_ThenAKitchenIsCreated() throws Exception{
         //when
-        when(registerKitchenService.save(kitchen)).thenReturn(kitchen);
+		kitchenDTO.setId(null);
+    	when(kitchenDTOAssembler.toDTO(any())).thenReturn(kitchenDTO);
+    	when(kitchenDTODisassembler.toDomainObject(any())).thenReturn(kitchen);
+		when(registerKitchenService.save(kitchen)).thenReturn(kitchen);
 
         // then
         mockMvc.perform(MockMvcRequestBuilders.post(URL_KITCHENS)
@@ -88,6 +107,8 @@ public class KitchenControllerTest {
 	@Test
 	public void whenPOSTIsCalled_ThenAKitchenIsCreateds() throws Exception{
         //when
+    	when(kitchenDTOAssembler.toDTO(any())).thenReturn(kitchenDTO);
+    	when(kitchenDTODisassembler.toDomainObject(any())).thenReturn(kitchen);
         when(registerKitchenService.save(kitchen)).thenReturn(kitchen);
 
         // then

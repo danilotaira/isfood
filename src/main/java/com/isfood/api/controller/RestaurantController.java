@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +31,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.isfood.api.assembler.RestaurantDTOAssembler;
+import com.isfood.api.assembler.RestaurantDTODisassembler;
+import com.isfood.api.model.RestaurantDTO;
 import com.isfood.core.validation.ValidationException;
 import com.isfood.domain.entity.Restaurant;
 import com.isfood.domain.exception.ControllerException;
@@ -42,6 +44,12 @@ import com.isfood.domain.service.RegisterRestaurantService;
 @RestController
 @RequestMapping(value = "/restaurant")
 public class RestaurantController {
+	
+	@Autowired
+	private RestaurantDTOAssembler restaurantDTOAssembler;
+	
+	@Autowired
+	private RestaurantDTODisassembler restaurantDTODisassembler;	
 
     @Autowired
     private RestaurantRepository restaurantRepository;
@@ -54,37 +62,42 @@ public class RestaurantController {
     
 
     @GetMapping
-    public List<Restaurant> list(){
-
-
-        List<Restaurant> restaurants =restaurantRepository.findAll();
-        return restaurants;
+    public List<RestaurantDTO> list(){
+        return restaurantDTOAssembler.toCollectionDTO(restaurantRepository.findAll());
     }
 
-    @GetMapping("/{restaurantID}")
-    public Restaurant find(@PathVariable Long restaurantID){
-        return registerRestaurantService.findOrFail(restaurantID);
+	@GetMapping("/{restaurantID}")
+    public RestaurantDTO find(@PathVariable Long restaurantID){
+        Restaurant restaurant = registerRestaurantService.findOrFail(restaurantID);
+        
+        return restaurantDTOAssembler.toDTO(restaurant);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Restaurant add(@RequestBody @Valid Restaurant restaurant){
+    public RestaurantDTO add(@RequestBody @Valid RestaurantDTO restaurantDTO){
         try {
-            return registerRestaurantService.save(restaurant);
+        	Restaurant restaurant = restaurantDTODisassembler.toDomainObject(restaurantDTO);
+        	
+            return restaurantDTOAssembler.toDTO(registerRestaurantService.save(restaurant));
         }catch (EntityNotFoundException e){
             throw new ControllerException(e.getMessage(), e);
         }
     }
 
     @PutMapping("/{restaurantID}")
-    public Restaurant update (@PathVariable long restaurantID, @RequestBody @Valid Restaurant restaurant){
-        Restaurant restaurantActual = registerRestaurantService.findOrFail(restaurantID);
+    public RestaurantDTO update (@PathVariable long restaurantID, @RequestBody @Valid RestaurantDTO restaurantDTO){
+//    	Restaurant restaurant = restaurantDTODisassembler.toDomainObject(restaurantInputDTO);
+    	
+    	Restaurant restaurantActual = registerRestaurantService.findOrFail(restaurantID);
+    	restaurantDTO.setId(restaurantID);
+    	restaurantDTODisassembler.copyToDomainObject(restaurantDTO, restaurantActual);
 
-        BeanUtils.copyProperties(restaurant, restaurantActual,
-                "id", "formOfPayment", "address", "dateCreated");
+//        BeanUtils.copyProperties(restaurant, restaurantActual,
+//                "id", "formOfPayment", "address", "dateCreated");
 
         try {
-                return registerRestaurantService.save(restaurantActual);
+                return restaurantDTOAssembler.toDTO(registerRestaurantService.save(restaurantActual)) ;
         } catch (EntityNotFoundException e){
             throw new ControllerException(e.getMessage(), e);
         }
@@ -93,6 +106,7 @@ public class RestaurantController {
     @PatchMapping("/{restaurantId}")
     public ResponseEntity<?> updatePartial(@PathVariable Long restaurantId,
                             @RequestBody @Valid Map<String, Object> fields, HttpServletRequest request) {
+    	
         Optional<Restaurant> restaurantActual = restaurantRepository.findById(restaurantId);
         if(restaurantActual.isEmpty()){
             return ResponseEntity.notFound().build();
@@ -102,7 +116,7 @@ public class RestaurantController {
         validate (restaurantActual.get(), "restaurant");
         
         restaurantActual = Optional.ofNullable(registerRestaurantService.update(restaurantId, restaurantActual.get()));
-        return ResponseEntity.ok().body(restaurantActual);
+        return ResponseEntity.ok().body(restaurantDTOAssembler.toDTO(restaurantActual.get()));
     }
 
     private void validate( Restaurant restaurant, String objectName) {
@@ -149,6 +163,6 @@ public class RestaurantController {
             return ResponseEntity.notFound().build();
         }
 
-    }
+    }    
 }
 

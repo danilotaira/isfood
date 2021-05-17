@@ -1,7 +1,7 @@
 package com.isfood.domain.entity;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,11 +78,11 @@ public class Restaurant {
 
     @CreationTimestamp
     @Column( nullable = false, columnDefinition = "timestamp with time zone")
-    private LocalDateTime dateCreated;
+    private OffsetDateTime dateCreated;
 
     @UpdateTimestamp
     @Column( nullable = false, columnDefinition = "timestamp with time zone")
-    private LocalDateTime dateModified;
+    private OffsetDateTime dateModified;
 
     @OneToMany(mappedBy = "restaurant")
     private List<Product> products = new ArrayList<>();

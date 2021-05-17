@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.isfood.api.assembler.CityDTOAssembler;
+import com.isfood.api.assembler.CityDTODisassembler;
+import com.isfood.api.model.CityDTO;
 import com.isfood.domain.entity.City;
 import com.isfood.domain.exception.ControllerException;
 import com.isfood.domain.exception.EntityInUseException;
@@ -28,6 +30,12 @@ import com.isfood.domain.service.RegisterCityService;
 @RestController
 @RequestMapping("/city")
 public class CityController {
+	
+	@Autowired
+	private CityDTOAssembler cityDTOAssembler;
+	
+	@Autowired
+	private CityDTODisassembler cityDTODisassembler;
 
     @Autowired
     private CityRepository cityRepository;
@@ -36,21 +44,22 @@ public class CityController {
     private RegisterCityService registerCityService;
 
     @GetMapping
-    public List<City> list(){
-        return cityRepository.findAll();
+    public List<CityDTO> list(){
+        return cityDTOAssembler.toCollectionDTO(cityRepository.findAll()) ;
     }
 
 
     @GetMapping("/{cityId}")
-    public City find(@PathVariable Integer cityId){
+    public CityDTO find(@PathVariable Integer cityId){
 
-        return registerCityService.findOrFail(cityId);
+        return cityDTOAssembler.toDTO(registerCityService.findOrFail(cityId)) ;
     }
 
     @PostMapping
-    public City save(@RequestBody @Valid City city){
+    public CityDTO save(@RequestBody @Valid CityDTO cityDTO){
         try{
-            return registerCityService.save(city);
+        	City city = cityDTODisassembler.toDomainObject(cityDTO);
+            return cityDTOAssembler.toDTO(registerCityService.save(city));
         }catch (StateNotFoundException e){
             throw new ControllerException(e.getMessage(), e);
         }
@@ -67,12 +76,15 @@ public class CityController {
 //    }
 
     @PutMapping("/{cityId}")
-    public City update (@PathVariable Integer cityId, @Valid @RequestBody City city){
+    public CityDTO update (@PathVariable Integer cityId, @Valid @RequestBody CityDTO cityDTO){
         try{
             City cityActual = registerCityService.findOrFail(cityId);
 
-            BeanUtils.copyProperties(city, cityActual, "id");
-            return registerCityService.save(cityActual);
+            cityDTO.setId(cityId);
+            
+            cityDTODisassembler.copyToDomainObject(cityDTO, cityActual);
+//            BeanUtils.copyProperties(city, cityActual, "id");
+            return cityDTOAssembler.toDTO(registerCityService.save(cityActual)) ;
         }catch (StateNotFoundException e){
             throw new ControllerException(e.getMessage(), e);
         }

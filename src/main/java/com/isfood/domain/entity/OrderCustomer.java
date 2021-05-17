@@ -1,7 +1,7 @@
 package com.isfood.domain.entity;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,10 +56,10 @@ public class OrderCustomer {
     @CreatedDate
     @CreationTimestamp
     @Column( nullable = false, columnDefinition = "timestamp with time zone")
-    private LocalDateTime dateCreated;
-    private LocalDateTime dateConfirmation;
-    private LocalDateTime dateCancellation;
-    private LocalDateTime dateDelivery;
+    private OffsetDateTime dateCreated;
+    private OffsetDateTime dateConfirmation;
+    private OffsetDateTime dateCancellation;
+    private OffsetDateTime dateDelivery;
 
     @ManyToOne
     @JoinColumn(nullable = false)

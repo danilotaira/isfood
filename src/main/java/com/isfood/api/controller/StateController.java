@@ -1,7 +1,6 @@
 package com.isfood.api.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
@@ -18,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.isfood.api.assembler.StateDTOAssembler;
+import com.isfood.api.assembler.StateDTODisassembler;
+import com.isfood.api.model.StateDTO;
 import com.isfood.domain.entity.State;
 import com.isfood.domain.exception.EntityInUseException;
 import com.isfood.domain.repository.StateRepository;
@@ -26,6 +28,12 @@ import com.isfood.domain.service.RegisterStateService;
 @RestController
 @RequestMapping("/state")
 public class StateController {
+	
+	@Autowired
+	private StateDTOAssembler stateDTOAssembler;
+	
+	@Autowired
+	private StateDTODisassembler stateDTODisassembler;
 
     @Autowired
     private StateRepository stateRepository;
@@ -34,29 +42,43 @@ public class StateController {
     private RegisterStateService registerStateService;
 
     @GetMapping
-    public List<State> list(){
-        return stateRepository.findAll();
+    public List<StateDTO> list(){
+        return stateDTOAssembler.toCollectionDTO(stateRepository.findAll()) ;
     }
 
 
     @GetMapping("/{stateId}")
-    public ResponseEntity<State> find(@PathVariable Integer stateId){
+    public StateDTO find(@PathVariable Integer stateId){
 
-        Optional<State> state = stateRepository.findById(stateId);
-        if (state != null)
-            return ResponseEntity.ok(state.get());
-
-        return ResponseEntity.notFound().build();
+        return stateDTOAssembler.toDTO(registerStateService.findOrFail(stateId)); 
     }
+    
+//    @GetMapping("/{stateId}")
+//    public ResponseEntity<State> find(@PathVariable Integer stateId){
+//    	
+//    	Optional<State> state = stateRepository.findById(stateId);
+//    	if (state != null)
+//    		return ResponseEntity.ok(state.get());
+//    	
+//    	return ResponseEntity.notFound().build();
+//    }
 
     @PostMapping
-    public State save(@RequestBody @Valid State state){
-        return registerStateService.save(state);
+    public StateDTO save(@RequestBody @Valid StateDTO stateDTO){
+    	State state = stateDTODisassembler.toDomainObject(stateDTO);
+    	
+        return stateDTOAssembler.toDTO(registerStateService.save(state)) ;
     }
 
     @PutMapping("/{stateId}")
-    public State update (@PathVariable Integer stateId, @RequestBody @Valid State state){
-           return registerStateService.udpate(stateId, state);
+    public StateDTO update (@PathVariable Integer stateId, @RequestBody @Valid StateDTO stateDTO){
+        State stateActual = registerStateService.findOrFail(stateId);
+
+        stateDTO.setId(stateId);
+        
+        stateDTODisassembler.copyToDomainObject(stateDTO, stateActual);
+    	
+       return stateDTOAssembler.toDTO(registerStateService.udpate(stateId, stateActual)) ;
     }
 
     @DeleteMapping("/{stateId}")
