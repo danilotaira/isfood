@@ -1,4 +1,4 @@
-package com.isfood.api.assembler;
+package com.isfood.api.mapper;
 
 import java.util.List;
 import java.util.stream.Collectors;

@@ -5,12 +5,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CityDTO {
-	
+public class CityResumeDTO {
     private Integer id;
 
     private String name;
 
-    private StateDTO state;
-
+    private String state;
 }

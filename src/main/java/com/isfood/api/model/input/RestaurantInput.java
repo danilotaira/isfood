@@ -1,4 +1,4 @@
-package com.isfood.api.model;
+package com.isfood.api.model.input;
 
 import java.math.BigDecimal;
 
@@ -6,10 +6,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
-import javax.validation.groups.ConvertGroup;
-import javax.validation.groups.Default;
 
-import com.isfood.core.validation.Groups;
 import com.isfood.core.validation.TaxShipping;
 
 import lombok.Getter;
@@ -17,9 +14,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class RestaurantDTO {
-		
-	private Long id;
+public class RestaurantInput {
 	
 	@NotBlank
 	private String name;
@@ -28,12 +23,12 @@ public class RestaurantDTO {
     @PositiveOrZero	
 	private BigDecimal taxShipping;
     
+    @Valid	
+    @NotNull
+    private KitchenIdInput kitchen;
+    
     @Valid
     @NotNull
-    @ConvertGroup(from = Default.class, to = Groups.KitchenId.class)
-    private KitchenDTO kitchen;
+    private AddressInput address;
     
-    private Boolean active;
-    
-    private AddressDTO address;
 }

@@ -24,9 +24,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
-import com.isfood.api.assembler.KitchenDTOAssembler;
-import com.isfood.api.assembler.KitchenDTODisassembler;
+import com.isfood.api.mapper.KitchenMapper;
 import com.isfood.api.model.KitchenDTO;
+import com.isfood.api.model.input.KitchenInput;
 import com.isfood.domain.entity.Kitchen;
 import com.isfood.domain.service.RegisterKitchenService;
 
@@ -47,10 +47,7 @@ public class KitchenControllerTest {
 	private RegisterKitchenService registerKitchenService;
 	
 	@Mock
-	private KitchenDTOAssembler kitchenDTOAssembler;	
-	
-	@Mock
-	private KitchenDTODisassembler kitchenDTODisassembler;		
+	private KitchenMapper kitchenMapper;		
 	
 	@InjectMocks
     private KitchenController kitchenController;
@@ -75,7 +72,7 @@ public class KitchenControllerTest {
 
         //when
         when(registerKitchenService.findAll()).thenReturn(Collections.singletonList(kitchen));
-        when(kitchenDTOAssembler.toCollectionDTO(Collections.singletonList(kitchen))).thenReturn(Collections.singletonList(kitchenDTO));
+        when(kitchenMapper.toCollectionDTO(Collections.singletonList(kitchen))).thenReturn(Collections.singletonList(kitchenDTO));
         
         // then
         mockMvc.perform(MockMvcRequestBuilders.get(URL_KITCHENS)
@@ -90,8 +87,8 @@ public class KitchenControllerTest {
 	public void whenPOSTIsCalled_ThenAKitchenIsCreated() throws Exception{
         //when
 		kitchenDTO.setId(null);
-    	when(kitchenDTOAssembler.toDTO(any())).thenReturn(kitchenDTO);
-    	when(kitchenDTODisassembler.toDomainObject(any())).thenReturn(kitchen);
+    	when(kitchenMapper.toDTO(any())).thenReturn(kitchenDTO);
+    	when(kitchenMapper.toDomainObject((KitchenInput) any())).thenReturn(kitchen);
 		when(registerKitchenService.save(kitchen)).thenReturn(kitchen);
 
         // then
@@ -107,8 +104,8 @@ public class KitchenControllerTest {
 	@Test
 	public void whenPOSTIsCalled_ThenAKitchenIsCreateds() throws Exception{
         //when
-    	when(kitchenDTOAssembler.toDTO(any())).thenReturn(kitchenDTO);
-    	when(kitchenDTODisassembler.toDomainObject(any())).thenReturn(kitchen);
+    	when(kitchenMapper.toDTO(any())).thenReturn(kitchenDTO);
+    	when(kitchenMapper.toDomainObject((KitchenInput) any())).thenReturn(kitchen);
         when(registerKitchenService.save(kitchen)).thenReturn(kitchen);
 
         // then

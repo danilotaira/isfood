@@ -64,6 +64,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 	@ExceptionHandler( EntityNotFoundException.class )
 	public ResponseEntity<?> handleEntityNotFoundException( EntityNotFoundException ex, WebRequest request ) {
 
+		
 		HttpStatus status = HttpStatus.NOT_FOUND;
 		ProblemType problemType = ProblemType.RECURSE_NOT_FOUND;
 		String detail = ex.getMessage();
@@ -212,7 +213,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 
 	private ResponseEntity<Object> handleUnrecognizedPropertyException( UnrecognizedPropertyException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request ) {
-		// TODO Auto-generated method stub
 		String path = ex.getPath().stream().map(ref -> ref.getFieldName()).collect(Collectors.joining("."));
 
 		ProblemType problemType = ProblemType.PROPERTY_NOT_EXSISTS;

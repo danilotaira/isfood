@@ -1,11 +1,12 @@
 package com.isfood.core.modelmapper;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeMap;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.isfood.api.model.RestaurantDTO;
-import com.isfood.domain.entity.Restaurant;
+import com.isfood.api.model.AddressDTO;
+import com.isfood.domain.entity.Address;
 
 @Configuration
 public class ModelMapperConfig {
@@ -15,6 +16,11 @@ public class ModelMapperConfig {
 		var modelMapper = new ModelMapper(); 
 //		modelMapper.createTypeMap(Restaurant.class, RestaurantDTO.class)
 //			.addMapping(Restaurant::getTaxShipping, RestaurantDTO::setPrecoShipping);
+		
+		TypeMap<Address, AddressDTO> addressToAddressDTOTypeMap = modelMapper.createTypeMap(Address.class, AddressDTO.class);		
+		addressToAddressDTOTypeMap.<String>addMapping(
+						source -> source.getCity().getState().getName(),
+						(destiny, value) -> destiny.getCity().setState(value));
 		return modelMapper;
 	}
 }

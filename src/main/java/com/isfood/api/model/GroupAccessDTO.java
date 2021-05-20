@@ -5,12 +5,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CityDTO {
+public class GroupAccessDTO {
 	
+
     private Integer id;
 
     private String name;
-
-    private StateDTO state;
 
 }

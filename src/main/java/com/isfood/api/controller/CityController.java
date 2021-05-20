@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.isfood.api.assembler.CityDTOAssembler;
-import com.isfood.api.assembler.CityDTODisassembler;
+import com.isfood.api.mapper.CityMapper;
 import com.isfood.api.model.CityDTO;
+import com.isfood.api.model.input.CityInput;
 import com.isfood.domain.entity.City;
 import com.isfood.domain.exception.ControllerException;
 import com.isfood.domain.exception.EntityInUseException;
@@ -32,11 +32,8 @@ import com.isfood.domain.service.RegisterCityService;
 public class CityController {
 	
 	@Autowired
-	private CityDTOAssembler cityDTOAssembler;
+	private CityMapper cityMapper;
 	
-	@Autowired
-	private CityDTODisassembler cityDTODisassembler;
-
     @Autowired
     private CityRepository cityRepository;
 
@@ -45,21 +42,21 @@ public class CityController {
 
     @GetMapping
     public List<CityDTO> list(){
-        return cityDTOAssembler.toCollectionDTO(cityRepository.findAll()) ;
+        return cityMapper.toCollectionDTO(cityRepository.findAll()) ;
     }
 
 
     @GetMapping("/{cityId}")
-    public CityDTO find(@PathVariable Integer cityId){
+    public CityDTO find(@PathVariable Integer cityId) {
 
-        return cityDTOAssembler.toDTO(registerCityService.findOrFail(cityId)) ;
+        return cityMapper.toDTO(registerCityService.findOrFail(cityId)) ;
     }
 
     @PostMapping
-    public CityDTO save(@RequestBody @Valid CityDTO cityDTO){
+    public CityDTO save(@RequestBody @Valid CityInput cityInput){
         try{
-        	City city = cityDTODisassembler.toDomainObject(cityDTO);
-            return cityDTOAssembler.toDTO(registerCityService.save(city));
+        	City city = cityMapper.toDomainObject(cityInput);
+            return cityMapper.toDTO(registerCityService.save(city));
         }catch (StateNotFoundException e){
             throw new ControllerException(e.getMessage(), e);
         }
@@ -82,10 +79,10 @@ public class CityController {
 
             cityDTO.setId(cityId);
             
-            cityDTODisassembler.copyToDomainObject(cityDTO, cityActual);
+            cityMapper.copyToDomainObject(cityDTO, cityActual);
 //            BeanUtils.copyProperties(city, cityActual, "id");
-            return cityDTOAssembler.toDTO(registerCityService.save(cityActual)) ;
-        }catch (StateNotFoundException e){
+            return cityMapper.toDTO(registerCityService.save(cityActual)) ;
+        }catch (Exception e){
             throw new ControllerException(e.getMessage(), e);
         }
     }

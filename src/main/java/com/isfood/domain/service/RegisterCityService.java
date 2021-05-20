@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.isfood.domain.entity.City;
 import com.isfood.domain.entity.State;
 import com.isfood.domain.exception.CityNotFoundException;
+import com.isfood.domain.exception.ControllerException;
 import com.isfood.domain.exception.EntityInUseException;
 import com.isfood.domain.repository.CityRepository;
 
@@ -32,7 +33,7 @@ public class RegisterCityService {
         return cityRepository.save(city);
     }
 
-    public City udpate(Integer id, City city){
+    public City udpate(Integer id, City city) throws ControllerException{
         City cityBefore = this.findOrFail(id);
         Integer stateId = city.getState().getId();
 
@@ -44,7 +45,7 @@ public class RegisterCityService {
         return cityRepository.save(cityBefore);
     }
 
-    public void delete(Integer id){
+    public void delete(Integer id) throws ControllerException{
         try {
             cityRepository.deleteById(id);
         }catch (EmptyResultDataAccessException e) {
@@ -55,7 +56,7 @@ public class RegisterCityService {
                     String.format(MSG_CITY_IN_USE, id));
         }
     }
-
+    
     public City findOrFail(Integer cityId){
         return cityRepository.findById(cityId)
                 .orElseThrow(() -> new CityNotFoundException(cityId));

@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.isfood.api.assembler.StateDTOAssembler;
-import com.isfood.api.assembler.StateDTODisassembler;
+import com.isfood.api.mapper.StateMapper;
 import com.isfood.api.model.StateDTO;
+import com.isfood.api.model.input.StateInput;
 import com.isfood.domain.entity.State;
 import com.isfood.domain.exception.EntityInUseException;
 import com.isfood.domain.repository.StateRepository;
@@ -30,11 +30,8 @@ import com.isfood.domain.service.RegisterStateService;
 public class StateController {
 	
 	@Autowired
-	private StateDTOAssembler stateDTOAssembler;
+	private StateMapper stateMapper;
 	
-	@Autowired
-	private StateDTODisassembler stateDTODisassembler;
-
     @Autowired
     private StateRepository stateRepository;
 
@@ -43,42 +40,32 @@ public class StateController {
 
     @GetMapping
     public List<StateDTO> list(){
-        return stateDTOAssembler.toCollectionDTO(stateRepository.findAll()) ;
+        return stateMapper.toCollectionDTO(stateRepository.findAll()) ;
     }
 
 
     @GetMapping("/{stateId}")
     public StateDTO find(@PathVariable Integer stateId){
 
-        return stateDTOAssembler.toDTO(registerStateService.findOrFail(stateId)); 
+        return stateMapper.toDTO(registerStateService.findOrFail(stateId)); 
     }
-    
-//    @GetMapping("/{stateId}")
-//    public ResponseEntity<State> find(@PathVariable Integer stateId){
-//    	
-//    	Optional<State> state = stateRepository.findById(stateId);
-//    	if (state != null)
-//    		return ResponseEntity.ok(state.get());
-//    	
-//    	return ResponseEntity.notFound().build();
-//    }
 
     @PostMapping
-    public StateDTO save(@RequestBody @Valid StateDTO stateDTO){
-    	State state = stateDTODisassembler.toDomainObject(stateDTO);
+    public StateDTO save(@RequestBody @Valid StateInput stateInput){
+    	State state = stateMapper.toDomainObject(stateInput);
     	
-        return stateDTOAssembler.toDTO(registerStateService.save(state)) ;
+        return stateMapper.toDTO(registerStateService.save(state)) ;
     }
 
     @PutMapping("/{stateId}")
-    public StateDTO update (@PathVariable Integer stateId, @RequestBody @Valid StateDTO stateDTO){
+    public StateDTO update (@PathVariable Integer stateId, @RequestBody @Valid StateInput stateInput){
         State stateActual = registerStateService.findOrFail(stateId);
 
-        stateDTO.setId(stateId);
+        stateInput.setId(stateId);
         
-        stateDTODisassembler.copyToDomainObject(stateDTO, stateActual);
+        stateMapper.copyToDomainObject(stateInput, stateActual);
     	
-       return stateDTOAssembler.toDTO(registerStateService.udpate(stateId, stateActual)) ;
+       return stateMapper.toDTO(registerStateService.udpate(stateId, stateActual)) ;
     }
 
     @DeleteMapping("/{stateId}")
