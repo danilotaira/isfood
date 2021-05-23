@@ -56,7 +56,7 @@ public class RegisterFormOfPaymentService {
 
     public FormOfPayment findOrFail(Integer id){
         return formOfPaymentRepository.findById(id)
-                .orElseThrow(() -> new CityNotFoundException(id));
+                .orElseThrow(() -> new FormOfPaymentNotFoundException(id));
     }
 }
 

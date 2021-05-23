@@ -3,7 +3,9 @@ package com.isfood.domain.entity;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -59,7 +61,7 @@ public class Restaurant {
 //    @JoinTable (name = "restaurante_forma_pagamento",
 //              joinColumns = @JoinColumn(name = "restaurante_id"),
 //              inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
-    private List<FormOfPayment> formOfPayments = new ArrayList<>();
+    private Set<FormOfPayment> formOfPayments = new HashSet<>();
 
     @Embedded
     private Address address;
@@ -74,5 +76,13 @@ public class Restaurant {
 
     @OneToMany(mappedBy = "restaurant")
     private List<Product> products = new ArrayList<>();
+
+    public boolean addFormOfPayment(FormOfPayment formOfPayment){
+        return getFormOfPayments().add(formOfPayment);
+    }
+
+    public boolean removeFormOfPayment(FormOfPayment formOfPayment){
+        return getFormOfPayments().remove(formOfPayment);
+    }
 }
 

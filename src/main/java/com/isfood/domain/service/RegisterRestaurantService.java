@@ -2,6 +2,7 @@ package com.isfood.domain.service;
 
 import javax.transaction.Transactional;
 
+import com.isfood.domain.entity.FormOfPayment;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -27,6 +28,9 @@ public class RegisterRestaurantService {
 
     @Autowired
     private RegisterKitchenService registerKitchenService;
+
+    @Autowired
+    private RegisterFormOfPaymentService registerFormOfPaymentService;
     
     @Autowired
     private RegisterCityService registerCityService;    
@@ -53,6 +57,22 @@ public class RegisterRestaurantService {
                     String.format(MSG_RESTAURANT_IN_USE, id));
         }
 
+    }
+
+    @Transactional
+    public void removeFormOfPayment(Long restaurantId, Integer formaOfPaymentId){
+        Restaurant restaurant = findOrFail(restaurantId);
+        FormOfPayment formOfPayment = registerFormOfPaymentService.findOrFail(formaOfPaymentId);
+
+        restaurant.removeFormOfPayment(formOfPayment);
+    }
+
+    @Transactional
+    public void addFormOfPayment(Long restaurantId, Integer formaOfPaymentId){
+        Restaurant restaurant = findOrFail(restaurantId);
+        FormOfPayment formOfPayment = registerFormOfPaymentService.findOrFail(formaOfPaymentId);
+
+        restaurant.addFormOfPayment(formOfPayment);
     }
     
     @Transactional

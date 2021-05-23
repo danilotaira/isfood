@@ -1,5 +1,6 @@
 package com.isfood.api.mapper;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,7 +12,7 @@ import com.isfood.api.model.FormOfPaymentDTO;
 import com.isfood.domain.entity.FormOfPayment;
 
 @Component
-public class FormOfPaymentAssembler {
+public class FormOfPaymentMapper {
 	
 	@Autowired
 	private ModelMapper modelMapper;
@@ -20,7 +21,7 @@ public class FormOfPaymentAssembler {
 		return modelMapper.map(formOfPayment, FormOfPaymentDTO.class);
 	}    
     
-    public List<FormOfPaymentDTO> toCollectionDTO(List<FormOfPayment> formOfPayments){
+    public List<FormOfPaymentDTO> toCollectionDTO(Collection<FormOfPayment> formOfPayments){
     	return formOfPayments.stream()
     			.map(formOfPayment -> toDTO(formOfPayment))
     			.collect(Collectors.toList());
