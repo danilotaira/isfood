@@ -21,6 +21,4 @@ public class UserAccessUpdateInput {
 	@Email(message = "Email should be valid")
 	private String email;
 
-	private List<GroupAccess> groupAccesses = new ArrayList<>();
-
 }

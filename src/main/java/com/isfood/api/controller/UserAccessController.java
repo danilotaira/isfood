@@ -54,7 +54,6 @@ public class UserAccessController {
     public UserAccessDTO update (@PathVariable Integer userAccessId, @Valid @RequestBody UserAccessUpdateInput userAccessUpdateInput){
         try{
             UserAccess userAccessActual = registerUserAccessService.findOrFail(userAccessId);
-            
             userAccessMapper.copyToDomainObject(userAccessUpdateInput, userAccessActual);
 //            BeanUtils.copyProperties(userAccess, userAccessActual, "id");
             return userAccessMapper.toDTO(registerUserAccessService.save(userAccessActual)) ;

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RegisterUserAccessService {
@@ -23,9 +24,22 @@ public class RegisterUserAccessService {
     @Autowired
     private UserAccessRepository userAccessRepository;
     
-    
-    public UserAccess save(UserAccess groupAccess){
-        return userAccessRepository.save(groupAccess);
+    @Transactional
+    public UserAccess save(UserAccess userAccess){
+        userAccessRepository.detach(userAccess);
+        Optional<UserAccess> userEmailExistent = userAccessRepository.findByEmail(userAccess.getEmail());
+
+        if (userEmailExistent.isPresent() && !userEmailExistent.get().equals(userAccess)){
+            throw new ControllerException(
+                    String.format("There is already a registered user with this email - %s", userAccess.getEmail()));
+        }
+
+//        if (userAccessRepository.existsByEmailAndIdNot(userAccess.getEmail(), userAccess.getId())) {
+//            throw new ControllerException(
+//                    String.format("There is already a registered user with this email - %s", userAccess.getEmail()));
+//        }
+
+        return userAccessRepository.save(userAccess);
     }
 
     @Transactional

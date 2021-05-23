@@ -27,7 +27,4 @@ public class UserAccessDTO {
     @JsonIgnore
     private OffsetDateTime dateCreated;
 
-    @JsonIgnore
-    private List<GroupAccess> groupAccesses = new ArrayList<>();
-
 }
