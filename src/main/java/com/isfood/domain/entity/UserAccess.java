@@ -43,10 +43,13 @@ public class UserAccess {
     @CreationTimestamp
     private OffsetDateTime dateCreated;
 
-
 //    @JoinTable(name = "user_groups", joinColumns = @JoinColumn(name = "groups_id"),
 //            inverseJoinColumns = @JoinColumn(name = "groups_id"))
     @ManyToMany
     private List<GroupAccess> groupAccesses = new ArrayList<>();
+
+    public boolean passwordMatchesWith(String password) {
+        return getPassword().equals(password);
+    }
 }
 
