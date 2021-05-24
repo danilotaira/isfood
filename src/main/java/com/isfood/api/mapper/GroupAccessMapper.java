@@ -1,5 +1,6 @@
 package com.isfood.api.mapper;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,7 +22,7 @@ public class GroupAccessMapper {
 		return modelMapper.map(groupAccess, GroupAccessDTO.class);
 	}    
     
-    public List<GroupAccessDTO> toCollectionDTO(List<GroupAccess> cities){
+    public List<GroupAccessDTO> toCollectionDTO(Collection<GroupAccess> cities){
     	return cities.stream()
     			.map(groupAccess -> toDTO(groupAccess))
     			.collect(Collectors.toList());

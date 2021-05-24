@@ -2,7 +2,9 @@ package com.isfood.domain.entity;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -46,7 +48,15 @@ public class UserAccess {
 //    @JoinTable(name = "user_groups", joinColumns = @JoinColumn(name = "groups_id"),
 //            inverseJoinColumns = @JoinColumn(name = "groups_id"))
     @ManyToMany
-    private List<GroupAccess> groupAccesses = new ArrayList<>();
+    private Set<GroupAccess> groupAccesses = new HashSet<>();
+
+    public boolean removeGroupAcess(GroupAccess groupAccess) {
+        return getGroupAccesses().remove(groupAccess);
+    }
+
+    public boolean addGroupAcess(GroupAccess groupAccess) {
+        return getGroupAccesses().add(groupAccess);
+    }
 
     public boolean passwordMatchesWith(String password) {
         return getPassword().equals(password);

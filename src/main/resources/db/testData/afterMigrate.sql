@@ -77,6 +77,12 @@ insert into user_access (date_created, email, name, password) values (current_ti
 insert into user_access (date_created, email, name, password) values (current_timestamp, 'supervisor@supervisor.com', 'supervisor', '123');
 insert into user_access (date_created, email, name, password) values (current_timestamp, 'admin@admin.com', 'admin', '123');
 
+insert into user_access_group_accesses values (1, 1);
+insert into user_access_group_accesses values (2, 1);
+insert into user_access_group_accesses values (2, 2);
+insert into user_access_group_accesses values (3, 1);
+insert into user_access_group_accesses values (3, 2);
+insert into user_access_group_accesses values (3, 3);
 
 ALTER SEQUENCE order_customer_id_seq RESTART WITH 1;
 insert into order_customer(status_order,

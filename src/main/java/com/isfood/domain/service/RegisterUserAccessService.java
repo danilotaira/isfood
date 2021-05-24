@@ -1,5 +1,7 @@
 package com.isfood.domain.service;
 
+import com.isfood.domain.entity.GroupAccess;
+import com.isfood.domain.entity.Permission;
 import com.isfood.domain.entity.UserAccess;
 import com.isfood.domain.exception.ControllerException;
 import com.isfood.domain.exception.EntityInUseException;
@@ -23,6 +25,9 @@ public class RegisterUserAccessService {
 
     @Autowired
     private UserAccessRepository userAccessRepository;
+
+    @Autowired
+    private RegisterGroupAccessService registerGroupAccessService;
     
     @Transactional
     public UserAccess save(UserAccess userAccess){
@@ -71,6 +76,22 @@ public class RegisterUserAccessService {
             throw new EntityInUseException(
                     String.format(MSG_USER_ACCESS_IN_USE, id));
         }
+    }
+
+    @Transactional
+    public void removeGroup(Integer userAccessId, Integer groupAccessId) {
+        UserAccess userAccess = findOrFail(userAccessId);
+        GroupAccess groupAccess = registerGroupAccessService.findOrFail(groupAccessId);
+
+        userAccess.removeGroupAcess(groupAccess);
+    }
+
+    @Transactional
+    public void addGroup(Integer userAccessId, Integer groupAccessId) {
+        UserAccess userAccess = findOrFail(userAccessId);
+        GroupAccess groupAccess = registerGroupAccessService.findOrFail(groupAccessId);
+
+        userAccess.addGroupAcess(groupAccess);
     }
     
     public UserAccess findOrFail(Integer groupAccessId){
