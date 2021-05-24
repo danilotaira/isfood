@@ -7,7 +7,9 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -24,10 +26,17 @@ public class GroupAccess {
     @Column(nullable = false)
     private String name;
 
-
 //    @JoinTable(name = "group_permissions", joinColumns = @JoinColumn(name = "groups_id"),
 //            inverseJoinColumns = @JoinColumn(name = "permissions_id"))
     @ManyToMany
-    private List<Permission> permissions = new ArrayList<>();
+    private Set<Permission> permissions = new HashSet<>();
+
+    public boolean removePermission(Permission permission) {
+        return getPermissions().remove(permission);
+    }
+
+    public boolean addPermission(Permission permission) {
+        return getPermissions().add(permission);
+    }
 }
 

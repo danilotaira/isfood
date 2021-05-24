@@ -39,7 +39,8 @@ ALTER SEQUENCE form_of_payment_id_seq RESTART WITH 4;
 
 insert into permission (id, name, description) values (1, 'CONSULT_KITCHENS', 'Allows you to consult kitchens');
 insert into permission (id, name, description) values (2, 'EDIT_KITCHENS', 'Allows you to edit kitchens');
-ALTER SEQUENCE permission_id_seq RESTART WITH 3;
+insert into permission (id, name, description) values (3, 'DELETE_KITCHENS', 'Allows you to delete kitchens');
+ALTER SEQUENCE permission_id_seq RESTART WITH 4;
 
 ALTER SEQUENCE restaurant_id_seq RESTART WITH 1;
 insert into restaurant (name, tax_shipping, kitchen_id, date_created, date_modified, address_cep, address_complement, address_district, address_number, address_public_place, address_city_id, active) values ('New Flavor', 5.2, 1, current_timestamp, current_timestamp,'03518-040', 'casa', 'jd fernandes', 193, 'rua canhamo do canada', 3, true);
@@ -65,11 +66,11 @@ insert into group_access (name) values ('ADMINISTRATORS');
 insert into group_access (name) values ('SUPERVISORS');
 
 insert into group_access_permissions values (1, 1);
-insert into group_access_permissions values (1, 2);
 insert into group_access_permissions values (2, 1);
 insert into group_access_permissions values (2, 2);
 insert into group_access_permissions values (3, 1);
 insert into group_access_permissions values (3, 2);
+insert into group_access_permissions values (3, 3);
 
 ALTER SEQUENCE user_access_id_seq RESTART WITH 1;
 insert into user_access (date_created, email, name, password) values (current_timestamp, 'user@user.com', 'user', '123');
