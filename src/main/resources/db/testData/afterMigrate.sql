@@ -13,6 +13,7 @@ delete from user_access;
 delete from user_access_group_accesses;
 delete from order_customer;
 delete from item_order  ;
+delete from restaurant_user_responsible  ;
 
 
 insert into kitchen (id, name) values (1, 'Tailandesa');
@@ -83,6 +84,10 @@ insert into user_access_group_accesses values (2, 2);
 insert into user_access_group_accesses values (3, 1);
 insert into user_access_group_accesses values (3, 2);
 insert into user_access_group_accesses values (3, 3);
+
+insert into restaurant_user_responsible values (1,1);
+insert into restaurant_user_responsible values (2,1);
+insert into restaurant_user_responsible values (3,2);
 
 ALTER SEQUENCE order_customer_id_seq RESTART WITH 1;
 insert into order_customer(status_order,

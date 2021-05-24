@@ -1,5 +1,5 @@
 create table form_of_payment (
-	id  serial not null,
+	id serial not null,
 	description varchar(50),
 	primary key (id)
 );

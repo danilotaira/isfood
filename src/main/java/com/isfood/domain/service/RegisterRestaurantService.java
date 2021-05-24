@@ -2,16 +2,13 @@ package com.isfood.domain.service;
 
 import javax.transaction.Transactional;
 
-import com.isfood.domain.entity.FormOfPayment;
+import com.isfood.domain.entity.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import com.isfood.domain.entity.City;
-import com.isfood.domain.entity.Kitchen;
-import com.isfood.domain.entity.Restaurant;
 import com.isfood.domain.exception.CityNotFoundException;
 import com.isfood.domain.exception.EntityInUseException;
 import com.isfood.domain.exception.RestaurantNotFoundException;
@@ -28,6 +25,9 @@ public class RegisterRestaurantService {
 
     @Autowired
     private RegisterKitchenService registerKitchenService;
+
+    @Autowired
+    private RegisterUserAccessService registerUserAccessService;
 
     @Autowired
     private RegisterFormOfPaymentService registerFormOfPaymentService;
@@ -57,6 +57,22 @@ public class RegisterRestaurantService {
                     String.format(MSG_RESTAURANT_IN_USE, id));
         }
 
+    }
+
+    @Transactional
+    public void removeResponsible(Long restaurantId, Integer userAccesId){
+        Restaurant restaurant = findOrFail(restaurantId);
+        UserAccess userAccess = registerUserAccessService.findOrFail(userAccesId);
+
+        restaurant.removeResponsible(userAccess);
+    }
+
+    @Transactional
+    public void addResponsible(Long restaurantId, Integer userAccesId){
+        Restaurant restaurant = findOrFail(restaurantId);
+        UserAccess userAccess = registerUserAccessService.findOrFail(userAccesId);
+
+        restaurant.addResponsible(userAccess);
     }
 
     @Transactional

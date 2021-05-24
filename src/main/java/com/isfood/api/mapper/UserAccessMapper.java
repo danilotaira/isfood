@@ -8,6 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,7 +22,7 @@ public class UserAccessMapper {
 		return modelMapper.map(userAccess, UserAccessDTO.class);
 	}    
     
-    public List<UserAccessDTO> toCollectionDTO(List<UserAccess> cities){
+    public List<UserAccessDTO> toCollectionDTO(Collection<UserAccess> cities){
     	return cities.stream()
     			.map(userAccess -> toDTO(userAccess))
     			.collect(Collectors.toList());
