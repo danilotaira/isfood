@@ -69,7 +69,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		ProblemType problemType = ProblemType.RECURSE_NOT_FOUND;
 		String detail = ex.getMessage();
 
-		Problem problem = createProblemBuilder(status, problemType, detail, MSG_GENERIC_FINAL_USER).build();
+		Problem problem = createProblemBuilder(status, problemType, detail, detail).build();
+//		Problem problem = createProblemBuilder(status, problemType, detail, MSG_GENERIC_FINAL_USER).build();
 
 		return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
 	}

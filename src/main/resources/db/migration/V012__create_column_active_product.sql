@@ -1,0 +1,1 @@
+alter table product add active boolean not null default true;
