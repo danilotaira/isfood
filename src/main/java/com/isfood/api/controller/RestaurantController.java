@@ -162,6 +162,18 @@ public class RestaurantController {
 
     }
 
+    @PutMapping("/{restaurantId}/opening")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void open(@PathVariable Long restaurantId) {
+        registerRestaurantService.open(restaurantId);
+    }
+
+    @PutMapping("/{restaurantId}/closure")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void closed(@PathVariable Long restaurantId) {
+        registerRestaurantService.close(restaurantId);
+    }
+
     @DeleteMapping("/{restaurantID}")
     public ResponseEntity<Restaurant> delete(@PathVariable long restaurantID){
         try{

@@ -77,6 +77,16 @@ public class Restaurant {
     @OneToMany(mappedBy = "restaurant")
     private List<Product> products = new ArrayList<>();
 
+    private Boolean open = Boolean.FALSE;
+
+    public void open() {
+        setOpen(true);
+    }
+
+    public void close() {
+        setOpen(false);
+    }
+
     public boolean addFormOfPayment(FormOfPayment formOfPayment){
         return getFormOfPayments().add(formOfPayment);
     }

@@ -1,0 +1,1 @@
+alter table restaurant add open boolean not null default false;

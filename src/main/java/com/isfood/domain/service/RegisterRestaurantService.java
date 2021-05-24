@@ -85,7 +85,21 @@ public class RegisterRestaurantService {
     public void deactivate(Long restaurantId) throws RestaurantNotFoundException {
     	Restaurant restaurantActual = findOrFail(restaurantId);
     	restaurantActual.setActive(false);
-    }    
+    }
+
+    @Transactional
+    public void open(Long restaurantId) {
+        Restaurant restaurantActual = findOrFail(restaurantId);
+
+        restaurantActual.open();
+    }
+
+    @Transactional
+    public void close(Long restaurantId) {
+        Restaurant restaurantActual = findOrFail(restaurantId);
+
+        restaurantActual.close();
+    }
 
     public Restaurant update(Long id, Restaurant restaurant) throws CityNotFoundException, RestaurantNotFoundException{
         Restaurant restaurantBefore = this.findOrFail(id);
