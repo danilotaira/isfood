@@ -1,5 +1,5 @@
 package com.isfood.domain.entity;
-
+//teste
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
