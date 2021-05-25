@@ -98,5 +98,9 @@ public class Restaurant {
     public boolean removeFormOfPayment(FormOfPayment formOfPayment){
         return getFormOfPayments().remove(formOfPayment);
     }
+
+    public boolean acceptFormOfPayment(FormOfPayment formOfPayment){
+        return getFormOfPayments().contains(formOfPayment);
+    }
 }
 

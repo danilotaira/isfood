@@ -3,18 +3,13 @@ package com.isfood.domain.entity;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
+import com.isfood.domain.enuns.StatusOrder;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -37,8 +32,8 @@ public class OrderCustomer {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
-    @Column
-    private String statusOrder;
+    @Enumerated(EnumType.STRING)
+    private StatusOrder statusOrder = StatusOrder.CREATED;
 
     @Embedded
     @JsonIgnore
@@ -74,6 +69,22 @@ public class OrderCustomer {
     private UserAccess userAccess;
 
     @OneToMany(mappedBy = "orderCustomer")
-    private List<ItemOrder> itens = new ArrayList<>();
+    private Set<ItemOrder> itens = new HashSet<>();
+
+    public void calculateTotalValue(){
+        this.subtotal = getItens().stream()
+                            .map(item -> item.getPriceTotal())
+                            .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        this.grandTotal = this.subtotal.add(this.taxShipping);
+    }
+
+    public void setShipping(){
+        setTaxShipping(getRestaurant().getTaxShipping());
+    }
+
+    public void assignOrderToItens(){
+        getItens().forEach(item -> item.setOrderCustomer(this));
+    }
 }
 

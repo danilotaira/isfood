@@ -9,6 +9,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import com.isfood.domain.exception.*;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,10 +38,6 @@ import com.isfood.api.model.RestaurantDTO;
 import com.isfood.api.model.input.RestaurantInput;
 import com.isfood.core.validation.ValidationException;
 import com.isfood.domain.entity.Restaurant;
-import com.isfood.domain.exception.CityNotFoundException;
-import com.isfood.domain.exception.ControllerException;
-import com.isfood.domain.exception.EntityInUseException;
-import com.isfood.domain.exception.KitchenNotFoundException;
 import com.isfood.domain.repository.RestaurantRepository;
 import com.isfood.domain.service.RegisterRestaurantService;
 
@@ -111,7 +108,27 @@ public class RestaurantController {
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void  deactivate(@PathVariable Long restaurantID) {
     	registerRestaurantService.deactivate(restaurantID);
-    }    
+    }
+
+    @PutMapping("/activate_all")
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    public void activateMultiples(@RequestBody List<Long> restaurantIds) {
+        try {
+            registerRestaurantService.activate(restaurantIds);
+        }catch (RestaurantNotFoundException e){
+            throw new ControllerException(e.getMessage(), e);
+        }
+    }
+
+    @DeleteMapping("/deactivate_all")
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    public void deactivateMultiples(@RequestBody List<Long> restaurantIds) {
+        try {
+            registerRestaurantService.deactivate(restaurantIds);
+        }catch (RestaurantNotFoundException e){
+            throw new ControllerException(e.getMessage(), e);
+        }
+    }
 
     @PatchMapping("/{restaurantId}")
     public ResponseEntity<?> updatePartial(@PathVariable Long restaurantId,

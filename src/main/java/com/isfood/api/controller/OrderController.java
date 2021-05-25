@@ -1,5 +1,7 @@
 package com.isfood.api.controller;
 
+import com.isfood.api.mapper.OrderCustomerMapper;
+import com.isfood.api.model.OrderCustomerDTO;
 import com.isfood.domain.entity.OrderCustomer;
 import com.isfood.domain.exception.EntityInUseException;
 import com.isfood.domain.repository.OrderRepository;
@@ -19,57 +21,22 @@ import java.util.Optional;
 public class OrderController {
 
     @Autowired
-    private OrderRepository orderRepository;
+    private OrderCustomerMapper orderCustomerMapper;
 
     @Autowired
     private RegisterOrderService registerOrderService;
 
     @GetMapping
-    public List<OrderCustomer> list(){
-        return orderRepository.findAll();
+    public List<OrderCustomerDTO> list(){
+        return orderCustomerMapper.toCollectionDTO(registerOrderService.findAll());
     }
     
     @GetMapping("/{orderId}")
-    public ResponseEntity<OrderCustomer> find(@PathVariable Long orderId){
+    public OrderCustomerDTO find(@PathVariable Long orderId){
 
-        Optional<OrderCustomer> kitchen = orderRepository.findById(orderId);
-        if (kitchen.isPresent())
-            return ResponseEntity.ok(kitchen.get());
+        OrderCustomer orderCustomer = registerOrderService.findOrFail(orderId);
 
-        return ResponseEntity.notFound().build();
+        return orderCustomerMapper.toDTO(orderCustomer);
     }
-
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public OrderCustomer add(@RequestBody OrderCustomer kitchen){
-        return registerOrderService.save(kitchen);
-    }
-
-    @PutMapping("/{kitchenId}")
-    public ResponseEntity<OrderCustomer> update (@PathVariable long kitchenId, @RequestBody OrderCustomer kitchen){
-        Optional<OrderCustomer> kitchenActual = orderRepository.findById(kitchenId);
-
-        if(kitchenActual.isPresent()){
-            BeanUtils.copyProperties(kitchen, kitchenActual.get(), "id");
-            OrderCustomer kitchenSaved = registerOrderService.save(kitchenActual.get());
-            return ResponseEntity.accepted().body(kitchenSaved);
-        }
-        return ResponseEntity.notFound().build();
-
-    }
-
-    @DeleteMapping("/{orderId}")
-    public ResponseEntity<?> delete(@PathVariable long orderId){
- 		try{
-            registerOrderService.delete(orderId);
-            return ResponseEntity.noContent().build();
-        } catch (EntityInUseException e){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-        } catch (EntityNotFoundException e){
-            return ResponseEntity.notFound().build();
-        }
-
-    }
-
 }
 

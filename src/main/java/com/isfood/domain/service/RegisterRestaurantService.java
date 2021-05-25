@@ -14,6 +14,8 @@ import com.isfood.domain.exception.EntityInUseException;
 import com.isfood.domain.exception.RestaurantNotFoundException;
 import com.isfood.domain.repository.RestaurantRepository;
 
+import java.util.List;
+
 @Service
 public class RegisterRestaurantService {
 
@@ -108,6 +110,16 @@ public class RegisterRestaurantService {
         Restaurant restaurantActual = findOrFail(restaurantId);
 
         restaurantActual.open();
+    }
+
+    @Transactional
+    public void activate(List<Long> restaurantIds){
+        restaurantIds.forEach(this::activate);
+    }
+
+    @Transactional
+    public void deactivate(List<Long> restaurantIds){
+        restaurantIds.forEach(this::deactivate);
     }
 
     @Transactional

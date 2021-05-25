@@ -95,7 +95,7 @@ address_city_id, address_cep, address_complement, address_district, address_numb
 subtotal, tax_shipping, grand_total,
 date_created, date_confirmation, date_cancellation, date_delivery,
 restaurant_id, form_of_payment_id, user_access_id) values (
-'CRIADO',
+'CREATED',
 2, '03580-010', 'casa', 'jd fernandes', 193, 'rua canhamo do canadá',
 125.00, 5.00, 130.00,
 current_timestamp, null, null, null,
@@ -106,7 +106,7 @@ address_city_id, address_cep, address_complement, address_district, address_numb
 subtotal, tax_shipping, grand_total,
 date_created, date_confirmation, date_cancellation, date_delivery,
 restaurant_id, form_of_payment_id, user_access_id) values (
-'ENTREGUE',
+'DELIVERED',
 2, '03518-040', '1 andar', 'vila euthalia', 2, 'rua coronel peroba',
 230.00, 10.00, 240.00,
 current_timestamp, current_timestamp, null, current_timestamp,

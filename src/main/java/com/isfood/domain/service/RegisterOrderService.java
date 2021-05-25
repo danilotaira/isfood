@@ -2,6 +2,7 @@ package com.isfood.domain.service;
 
 import com.isfood.domain.entity.OrderCustomer;
 import com.isfood.domain.exception.EntityInUseException;
+import com.isfood.domain.exception.OrderCustomerNotFoundException;
 import com.isfood.domain.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -9,6 +10,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 
 @Service
 public class RegisterOrderService {
@@ -31,6 +33,15 @@ public class RegisterOrderService {
             throw new EntityInUseException(
                     String.format("Order with code: %d cannot be removed, because it is in use.", orderCustomerId));
         }
+    }
+
+    public OrderCustomer findOrFail(Long orderId){
+        return orderRepository.findById(orderId)
+                .orElseThrow(() -> new OrderCustomerNotFoundException(orderId));
+    }
+
+    public List<OrderCustomer> findAll() {
+        return orderRepository.findAll();
     }
 }
 
