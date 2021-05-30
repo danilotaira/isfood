@@ -31,6 +31,7 @@ public class OrderCustomerDTO {
     private OffsetDateTime dateDelivery;
     private RestaurantResumeDTO restaurant;
     private FormOfPaymentDTO formOfPayment;
+    private AddressDTO address;
     private UserAccessDTO userAccess;
-    private Set<ItemOrder> itens = new HashSet<>();
+    private Set<ItemOrderDTO> itens = new HashSet<>();
 }

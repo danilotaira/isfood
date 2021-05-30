@@ -1,20 +1,18 @@
 package com.isfood.api.controller;
 
 import com.isfood.api.mapper.OrderCustomerMapper;
+import com.isfood.api.mapper.OrderCustomerResumeMapper;
 import com.isfood.api.model.OrderCustomerDTO;
+import com.isfood.api.model.OrderCustomerResumeDTO;
 import com.isfood.domain.entity.OrderCustomer;
-import com.isfood.domain.exception.EntityInUseException;
-import com.isfood.domain.repository.OrderRepository;
 import com.isfood.domain.service.RegisterOrderService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/order")
@@ -24,15 +22,18 @@ public class OrderController {
     private OrderCustomerMapper orderCustomerMapper;
 
     @Autowired
+    private OrderCustomerResumeMapper orderCustomerResumeMapper;
+
+    @Autowired
     private RegisterOrderService registerOrderService;
 
     @GetMapping
-    public List<OrderCustomerDTO> list(){
-        return orderCustomerMapper.toCollectionDTO(registerOrderService.findAll());
+    public List<OrderCustomerResumeDTO> list() {
+        return orderCustomerResumeMapper.toCollectionDTO(registerOrderService.findAll());
     }
-    
+
     @GetMapping("/{orderId}")
-    public OrderCustomerDTO find(@PathVariable Long orderId){
+    public OrderCustomerDTO find(@PathVariable Long orderId) {
 
         OrderCustomer orderCustomer = registerOrderService.findOrFail(orderId);
 

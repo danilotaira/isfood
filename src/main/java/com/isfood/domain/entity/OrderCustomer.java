@@ -60,7 +60,7 @@ public class OrderCustomer {
     @JoinColumn(nullable = false)
     private Restaurant restaurant;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private FormOfPayment formOfPayment;
 

@@ -9,6 +9,7 @@ import javax.validation.constraints.PositiveOrZero;
 import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.isfood.core.validation.Groups;
 import com.isfood.core.validation.TaxShipping;
 
@@ -17,6 +18,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
+//@JsonIgnoreProperties(ignoreUnknown = true, value={"hibernateLazyInitializer", "handler"})
 public class RestaurantDTO {
 		
 	private Long id;
