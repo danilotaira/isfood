@@ -12,7 +12,6 @@ import java.math.BigDecimal;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class ItemOrder {
 
-    @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,5 +28,21 @@ public class ItemOrder {
 
     @ManyToOne
     @JoinColumn(nullable = false)
+    @EqualsAndHashCode.Include
     private Product product;
+
+    public void calculateGrandTotal() {
+        BigDecimal priceUnit = this.getPriceUnit();
+        Double quantity = this.getQuantity();
+
+        if (priceUnit == null) {
+            priceUnit = BigDecimal.ZERO;
+        }
+
+        if (quantity == null) {
+            quantity = 0D;
+        }
+
+        this.setPriceTotal(priceUnit.multiply(new BigDecimal(quantity)));
+    }
 }

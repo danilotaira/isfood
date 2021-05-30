@@ -8,25 +8,35 @@ import com.isfood.domain.enuns.StatusOrder;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
 @Setter
 public class OrderCustomerInput {
 
-    private StatusOrder statusOrder;
-    private BigDecimal subtotal;
-    private BigDecimal taxShipping;
-    private BigDecimal grandTotal;
-    private OffsetDateTime dateCreated;
-    private OffsetDateTime dateConfirmation;
-    private OffsetDateTime dateCancellation;
-    private OffsetDateTime dateDelivery;
+    @Valid
+    @NotNull
+    private AddressInput address;
+
+    @Valid
+    @NotNull
     private IdInput restaurant;
+
+    @Valid
+    @NotNull
     private IdInput formOfPayment;
     private IdInput userAccess;
-    private Set<ItemOrder> itens = new HashSet<>();
+
+    @Valid
+    @NotNull
+    @Size(min = 1)
+    private Set<ItemOrderInput> itens = new HashSet<>();
 }

@@ -68,10 +68,12 @@ public class OrderCustomer {
     @JoinColumn(name = "user_access_id", nullable = false)
     private UserAccess userAccess;
 
-    @OneToMany(mappedBy = "orderCustomer")
+    @OneToMany(mappedBy = "orderCustomer", cascade = CascadeType.ALL)
     private Set<ItemOrder> itens = new HashSet<>();
 
     public void calculateTotalValue(){
+        getItens().forEach(ItemOrder::calculateGrandTotal);
+
         this.subtotal = getItens().stream()
                             .map(item -> item.getPriceTotal())
                             .reduce(BigDecimal.ZERO, BigDecimal::add);

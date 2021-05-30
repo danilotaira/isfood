@@ -43,7 +43,7 @@ public class Restaurant {
     
     private Boolean active = Boolean.TRUE;
 
-    @ManyToOne (fetch = FetchType.LAZY)
+    @ManyToOne (fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "kitchen_id", nullable = false)
 //    @OnDelete(action = OnDeleteAction.CASCADE)
     private Kitchen kitchen;

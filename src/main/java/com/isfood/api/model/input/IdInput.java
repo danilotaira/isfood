@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,6 @@ import java.util.List;
 @Setter
 public class IdInput {
 
-	@NotBlank
+	@NotNull
 	private Integer id;
 }

@@ -1,5 +1,7 @@
 package com.isfood.core.modelmapper;
 
+import com.isfood.api.model.input.ItemOrderInput;
+import com.isfood.domain.entity.ItemOrder;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +23,8 @@ public class ModelMapperConfig {
 		addressToAddressDTOTypeMap.<String>addMapping(
 						source -> source.getCity().getState().getName(),
 						(destiny, value) -> destiny.getCity().setState(value));
+		modelMapper.createTypeMap(ItemOrderInput.class, ItemOrder.class)
+				.addMappings(mapper -> mapper.skip(ItemOrder::setId));
 		return modelMapper;
 	}
 }

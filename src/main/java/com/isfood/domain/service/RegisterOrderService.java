@@ -18,24 +18,24 @@ public class RegisterOrderService {
     @Autowired
     private OrderRepository orderRepository;
 
-    public OrderCustomer save(OrderCustomer orderCustomer){
+    public OrderCustomer save(OrderCustomer orderCustomer) {
         return orderRepository.save(orderCustomer);
     }
 
-    public void delete(Long orderCustomerId){
+    public void delete(Long orderCustomerId) {
         try {
             orderRepository.deleteById(orderCustomerId);
-        }catch (EmptyResultDataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             throw new EntityNotFoundException(
                     String.format("There is no Order register with the code= %d", orderCustomerId));
 
-        }catch (DataIntegrityViolationException e){
+        } catch (DataIntegrityViolationException e) {
             throw new EntityInUseException(
                     String.format("Order with code: %d cannot be removed, because it is in use.", orderCustomerId));
         }
     }
 
-    public OrderCustomer findOrFail(Long orderId){
+    public OrderCustomer findOrFail(Long orderId) {
         return orderRepository.findById(orderId)
                 .orElseThrow(() -> new OrderCustomerNotFoundException(orderId));
     }
