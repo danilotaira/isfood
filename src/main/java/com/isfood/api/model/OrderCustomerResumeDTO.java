@@ -1,5 +1,6 @@
 package com.isfood.api.model;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.isfood.domain.enuns.StatusOrder;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+@JsonFilter("orderFilter")
 @Getter
 @Setter
 public class OrderCustomerResumeDTO {
