@@ -35,9 +35,9 @@ public class RegisterOrderService {
         }
     }
 
-    public OrderCustomer findOrFail(Long orderId) {
-        return orderRepository.findById(orderId)
-                .orElseThrow(() -> new OrderCustomerNotFoundException(orderId));
+    public OrderCustomer findOrFail(String uuid) {
+        return orderRepository.findByUuid(uuid)
+                .orElseThrow(() -> new OrderCustomerNotFoundException(uuid));
     }
 
     public List<OrderCustomer> findAll() {

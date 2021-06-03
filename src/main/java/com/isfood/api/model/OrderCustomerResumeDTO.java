@@ -13,7 +13,8 @@ import java.util.Set;
 @Setter
 public class OrderCustomerResumeDTO {
 
-    private Long id;
+//    private Long id;
+    private String uuid;
     private StatusOrder statusOrder;
     private BigDecimal subtotal;
     private BigDecimal taxShipping;

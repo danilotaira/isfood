@@ -40,7 +40,7 @@ public class OrderController {
     }
 
     @GetMapping("/{orderId}")
-    public OrderCustomerDTO find(@PathVariable Long orderId) {
+    public OrderCustomerDTO find(@PathVariable String orderId) {
 
         OrderCustomer orderCustomer = registerOrderService.findOrFail(orderId);
 

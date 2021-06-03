@@ -2,14 +2,12 @@ package com.isfood.domain.entity;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import javax.persistence.*;
 
 import com.isfood.domain.enuns.StatusOrder;
+import com.isfood.domain.exception.ControllerException;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -31,6 +29,8 @@ public class OrderCustomer {
     @EqualsAndHashCode.Include
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
+
+    private String uuid;
 
     @Enumerated(EnumType.STRING)
     private StatusOrder statusOrder = StatusOrder.CREATED;
@@ -87,6 +87,39 @@ public class OrderCustomer {
 
     public void assignOrderToItens(){
         getItens().forEach(item -> item.setOrderCustomer(this));
+    }
+
+    private void setStatusOrder(StatusOrder statusOrder){
+
+    }
+
+    public void confirm(){
+        setStatusOrder(StatusOrder.CONFIRMED);
+        setDateConfirmation(OffsetDateTime.now());
+    }
+
+    public void deliver(){
+        setStatusOrder(StatusOrder.DELIVERED);
+        setDateDelivery(OffsetDateTime.now());
+    }
+
+    public void cancel(){
+        setStatusOrder(StatusOrder.CANCELED);
+        setDateCancellation(OffsetDateTime.now());
+    }
+
+    private void setStatus(StatusOrder newStatus){
+        if (getStatusOrder().cannotChangeTo(newStatus)) {
+            throw new ControllerException(
+                String.format("Order status %s cannot be changed from %s to %s.",
+                    getUuid(), getStatusOrder().getDescription(), newStatus.getDescription()));
+        }
+        this.statusOrder = newStatus;
+    }
+
+    @PrePersist
+    private void generateUuid(){
+        setUuid(UUID.randomUUID().toString());
     }
 }
 

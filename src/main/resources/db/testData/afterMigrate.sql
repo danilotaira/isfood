@@ -94,23 +94,23 @@ insert into order_customer(status_order,
 address_city_id, address_cep, address_complement, address_district, address_number, address_public_place,
 subtotal, tax_shipping, grand_total,
 date_created, date_confirmation, date_cancellation, date_delivery,
-restaurant_id, form_of_payment_id, user_access_id) values (
+restaurant_id, form_of_payment_id, user_access_id, uuid) values (
 'CREATED',
 2, '03580-010', 'casa', 'jd fernandes', 193, 'rua canhamo do canadá',
 125.00, 5.00, 130.00,
 current_timestamp, null, null, null,
-2, 2, 1
+2, 2, 1, '6b8958be-6315-432d-93bf-82cf4b9317cf'
 );
 insert into order_customer(status_order,
 address_city_id, address_cep, address_complement, address_district, address_number, address_public_place,
 subtotal, tax_shipping, grand_total,
 date_created, date_confirmation, date_cancellation, date_delivery,
-restaurant_id, form_of_payment_id, user_access_id) values (
+restaurant_id, form_of_payment_id, user_access_id, uuid) values (
 'DELIVERED',
 2, '03518-040', '1 andar', 'vila euthalia', 2, 'rua coronel peroba',
 230.00, 10.00, 240.00,
 current_timestamp, current_timestamp, null, current_timestamp,
-1, 1, 2
+1, 1, 2, 'de801dbe-5b47-4e4b-bb11-56c80b9bd272'
 );
 
 ALTER SEQUENCE item_order_id_seq RESTART WITH 1;
