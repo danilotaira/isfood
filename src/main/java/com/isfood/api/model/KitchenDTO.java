@@ -3,6 +3,8 @@ package com.isfood.api.model;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import com.isfood.api.model.view.RestaurantView;
 import com.isfood.core.validation.Groups;
 
 import lombok.Getter;
@@ -11,11 +13,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class KitchenDTO {
-	
-	@NotNull(groups = Groups.KitchenId.class)
+	@JsonView(RestaurantView.Resume.class)
 	private Long id;
-	
-	@NotBlank
+
+	@JsonView(RestaurantView.Resume.class)
 	private String name;
 
 }

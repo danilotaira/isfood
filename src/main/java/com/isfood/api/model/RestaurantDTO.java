@@ -10,6 +10,8 @@ import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.isfood.api.model.view.RestaurantView;
 import com.isfood.core.validation.Groups;
 import com.isfood.core.validation.TaxShipping;
 
@@ -20,24 +22,20 @@ import lombok.Setter;
 @Setter
 //@JsonIgnoreProperties(ignoreUnknown = true, value={"hibernateLazyInitializer", "handler"})
 public class RestaurantDTO {
-		
+
+    @JsonView({RestaurantView.Resume.class, RestaurantView.OnlyName.class})
 	private Long id;
-	
-	@NotBlank
+
+    @JsonView({RestaurantView.Resume.class, RestaurantView.OnlyName.class})
 	private String name;
-	
-    @TaxShipping
-    @PositiveOrZero	
+
+    @JsonView(RestaurantView.Resume.class)
 	private BigDecimal taxShipping;
-    
-    @Valid
-    @NotNull
-    @ConvertGroup(from = Default.class, to = Groups.KitchenId.class)
+
+    @JsonView(RestaurantView.Resume.class)
     private KitchenDTO kitchen;
-    
+
     private Boolean active;
-
     private Boolean open;
-
     private AddressDTO address;
 }

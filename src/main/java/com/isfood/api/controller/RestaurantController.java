@@ -9,6 +9,8 @@ import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import com.isfood.api.model.view.RestaurantView;
 import com.isfood.domain.exception.*;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.BeanUtils;
@@ -16,20 +18,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.SmartValidator;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -58,9 +52,37 @@ public class RestaurantController {
     private SmartValidator validator;
     
 
+//    @GetMapping(params = "projection=resume")
+//    @JsonView(RestaurantView.Resume.class)
+//    public List<RestaurantDTO> summaryList(){
+//        return restaurantMapper.toCollectionDTO(restaurantRepository.findAll());
+//    }
+//
+//    @GetMapping(params = "projection=only-name")
+//    @JsonView(RestaurantView.OnlyName.class)
+//    public List<RestaurantDTO> onlyNameList(){
+//        return restaurantMapper.toCollectionDTO(restaurantRepository.findAll());
+//    }
+//
+//    @GetMapping
+//    public List<RestaurantDTO> list(){
+//        return restaurantMapper.toCollectionDTO(restaurantRepository.findAll());
+//    }
+
     @GetMapping
-    public List<RestaurantDTO> list(){
-        return restaurantMapper.toCollectionDTO(restaurantRepository.findAll());
+    public MappingJacksonValue list(@RequestParam(required = false) String projection){
+        List<Restaurant> restaurants = restaurantRepository.findAll();
+        List<RestaurantDTO> restaurantDTOS = restaurantMapper.toCollectionDTO(restaurants);
+
+        MappingJacksonValue restaurantsWrapper = new MappingJacksonValue(restaurantDTOS);
+        restaurantsWrapper.setSerializationView(RestaurantView.Resume.class);
+        if("only-name".equals(projection)){
+            restaurantsWrapper.setSerializationView(RestaurantView.OnlyName.class);
+        } else if ("complete".equals(projection)){
+            restaurantsWrapper.setSerializationView(null);
+        }
+
+        return restaurantsWrapper;
     }
 
 	@GetMapping("/{restaurantID}")
