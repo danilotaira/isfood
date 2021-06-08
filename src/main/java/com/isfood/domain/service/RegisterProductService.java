@@ -26,6 +26,10 @@ public class RegisterProductService {
     public List<Product> findByRestaurant (Restaurant restaurant){
         return produtctRepository.findByRestaurant(restaurant);
     }
+
+    public List<Product> findActivesByRestaurant (Restaurant restaurant){
+        return produtctRepository.findActivesByRestaurant(restaurant);
+    }
     
     public List<Product> findAll(){
     	return produtctRepository.findAll();

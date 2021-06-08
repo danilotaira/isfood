@@ -113,6 +113,18 @@ current_timestamp, current_timestamp, null, current_timestamp,
 1, 1, 2, 'de801dbe-5b47-4e4b-bb11-56c80b9bd272'
 );
 
+insert into order_customer(status_order,
+address_city_id, address_cep, address_complement, address_district, address_number, address_public_place,
+subtotal, tax_shipping, grand_total,
+date_created, date_confirmation, date_cancellation, date_delivery,
+restaurant_id, form_of_payment_id, user_access_id, uuid) values (
+'DELIVERED',
+2, '00000-000', '', 'Vila Bizu', 2, 'Franciso de Paula',
+360.00, 160.00, 200.00,
+'2021-06-05 14:00:00 -03:00', current_timestamp, null, current_timestamp,
+2, 3, 2, 'de801dbe-5b47-4e4b-bb11-56c80b9bd271'
+);
+
 ALTER SEQUENCE item_order_id_seq RESTART WITH 1;
 insert into item_order (quantity,price_unit,price_total,note,
 order_customer_id, product_id) values (
@@ -135,6 +147,14 @@ insert into item_order (quantity,price_unit,price_total,note,
 order_customer_id, product_id) values (
 1, 40.00, 40.00, null,
 2, 5);
+insert into item_order (quantity,price_unit,price_total,note,
+order_customer_id, product_id) values (
+1, 40.00, 40.00, null,
+3, 6);
+insert into item_order (quantity,price_unit,price_total,note,
+order_customer_id, product_id) values (
+1, 40.00, 40.00, null,
+3, 7);
 
 
 

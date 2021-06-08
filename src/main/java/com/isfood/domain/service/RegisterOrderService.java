@@ -4,9 +4,11 @@ import com.isfood.domain.entity.OrderCustomer;
 import com.isfood.domain.exception.EntityInUseException;
 import com.isfood.domain.exception.OrderCustomerNotFoundException;
 import com.isfood.domain.repository.OrderRepository;
+import com.isfood.domain.repository.filter.OrderFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -40,8 +42,8 @@ public class RegisterOrderService {
                 .orElseThrow(() -> new OrderCustomerNotFoundException(uuid));
     }
 
-    public List<OrderCustomer> findAll() {
-        return orderRepository.findAll();
+    public List<OrderCustomer> findAll(Specification<OrderCustomer> especification) {
+        return orderRepository.findAll(especification);
     }
 }
 

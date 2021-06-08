@@ -30,10 +30,18 @@ public class RestaurantProductController {
 
 
     @GetMapping
-    public List<ProductDTO> list(@PathVariable Long restaurantId){
+    public List<ProductDTO> list(@PathVariable Long restaurantId,
+                                @RequestParam(required = false) boolean includeInactives){
         Restaurant restaurant = registerRestaurantService.findOrFail(restaurantId);
 
-        return  productMapper.toCollectionDTO(registerProductService.findByRestaurant(restaurant));
+        List<ProductDTO> list = null;
+        if (includeInactives){
+            list = productMapper.toCollectionDTO(registerProductService.findByRestaurant(restaurant));
+        }else{
+            list = productMapper.toCollectionDTO(registerProductService.findActivesByRestaurant(restaurant));
+        }
+
+        return  list;
     }
 
     @GetMapping("/{productId}")

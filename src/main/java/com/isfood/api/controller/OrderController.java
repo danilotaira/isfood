@@ -1,7 +1,5 @@
 package com.isfood.api.controller;
 
-import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
-import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.isfood.api.mapper.OrderCustomerMapper;
 import com.isfood.api.mapper.OrderCustomerResumeMapper;
 import com.isfood.api.model.OrderCustomerDTO;
@@ -11,12 +9,12 @@ import com.isfood.domain.entity.OrderCustomer;
 import com.isfood.domain.entity.UserAccess;
 import com.isfood.domain.exception.ControllerException;
 import com.isfood.domain.exception.EntityNotFoundException;
+import com.isfood.domain.repository.filter.OrderFilter;
 import com.isfood.domain.service.IssueOrderService;
 import com.isfood.domain.service.RegisterOrderService;
-import org.apache.commons.lang3.StringUtils;
+import com.isfood.infrastructure.repository.spec.OrderSpecs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -38,30 +36,32 @@ public class OrderController {
     @Autowired
     private IssueOrderService issueOrderService;
 
-//    @GetMapping
-//    public List<OrderCustomerResumeDTO> list() {
-//        return orderCustomerResumeMapper.toCollectionDTO(registerOrderService.findAll());
-//    }
-
     @GetMapping
-    public MappingJacksonValue list(@RequestParam(required = false) String fields) {
-        List<OrderCustomer> list = registerOrderService.findAll();
-        List<OrderCustomerResumeDTO> orderCustomerResumeDTOS = orderCustomerResumeMapper.toCollectionDTO(list);
+    public List<OrderCustomerResumeDTO> search(OrderFilter orderFilter) {
+        List<OrderCustomer> found = registerOrderService.findAll(OrderSpecs.usingFilter(orderFilter));
 
-        MappingJacksonValue orderWrapper = new MappingJacksonValue(orderCustomerResumeDTOS);
-
-        SimpleFilterProvider filterProvider = new SimpleFilterProvider();
-        filterProvider.addFilter("orderFilter", SimpleBeanPropertyFilter.serializeAll());
-//        filterProvider.addFilter("orderFilter", SimpleBeanPropertyFilter.filterOutAllExcept("uuid", "grandTotal"));
-
-        if (StringUtils.isNotBlank(fields)){
-            filterProvider.addFilter("orderFilter",
-                    SimpleBeanPropertyFilter.filterOutAllExcept(fields.split(",")));
-        }
-
-        orderWrapper.setFilters(filterProvider);
-        return orderWrapper;
+        return orderCustomerResumeMapper.toCollectionDTO(found);
     }
+
+//    @GetMapping
+//    public MappingJacksonValue list(@RequestParam(required = false) String fields) {
+//        List<OrderCustomer> list = registerOrderService.findAll();
+//        List<OrderCustomerResumeDTO> orderCustomerResumeDTOS = orderCustomerResumeMapper.toCollectionDTO(list);
+//
+//        MappingJacksonValue orderWrapper = new MappingJacksonValue(orderCustomerResumeDTOS);
+//
+//        SimpleFilterProvider filterProvider = new SimpleFilterProvider();
+//        filterProvider.addFilter("orderFilter", SimpleBeanPropertyFilter.serializeAll());
+////        filterProvider.addFilter("orderFilter", SimpleBeanPropertyFilter.filterOutAllExcept("uuid", "grandTotal"));
+//
+//        if (StringUtils.isNotBlank(fields)){
+//            filterProvider.addFilter("orderFilter",
+//                    SimpleBeanPropertyFilter.filterOutAllExcept(fields.split(",")));
+//        }
+//
+//        orderWrapper.setFilters(filterProvider);
+//        return orderWrapper;
+//    }
 
     @GetMapping("/{orderId}")
     public OrderCustomerDTO find(@PathVariable String orderId) {

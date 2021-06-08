@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.Nullable;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -59,7 +60,13 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 	    		.build();
 
 	    return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
-	}   	
+	}
+
+	@Override
+	protected ResponseEntity<Object> handleBindException(BindException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+		return handleValidationInternal(ex, ex.getBindingResult(), new HttpHeaders(),
+				HttpStatus.BAD_REQUEST, request);
+	}
 
 	@ExceptionHandler( EntityNotFoundException.class )
 	public ResponseEntity<?> handleEntityNotFoundException( EntityNotFoundException ex, WebRequest request ) {
@@ -158,7 +165,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 	
 	
 	protected ResponseEntity<Object> handleValidationInternal(Exception ex, BindingResult bindingResult,
-			HttpHeaders headers, HttpStatus status, WebRequest request ) {
+			HttpHeaders headers, HttpStatus status, WebRequest request) {
 		
 		ProblemType problemType = ProblemType.ARGUMENT_TYPE_MISMATCH;
 		String detail = "One or more fields are missing.";
