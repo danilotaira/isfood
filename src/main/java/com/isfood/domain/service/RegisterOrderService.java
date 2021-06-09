@@ -8,6 +8,8 @@ import com.isfood.domain.repository.filter.OrderFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +46,10 @@ public class RegisterOrderService {
 
     public List<OrderCustomer> findAll(Specification<OrderCustomer> especification) {
         return orderRepository.findAll(especification);
+    }
+
+    public Page<OrderCustomer> findAll(Specification<OrderCustomer> especification, Pageable pageable) {
+        return orderRepository.findAll(especification, pageable);
     }
 }
 

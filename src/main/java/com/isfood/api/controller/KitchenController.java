@@ -5,7 +5,12 @@ import java.util.List;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 
+import com.isfood.domain.repository.KitchenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,6 +34,9 @@ import com.isfood.domain.service.RegisterKitchenService;
 @RestController
  @RequestMapping(value = "/kitchens") 
 public class KitchenController {
+
+    @Autowired
+    private KitchenRepository kitchenRepository;
 	
 	@Autowired
 	private KitchenMapper kitchenMapper;	
@@ -36,9 +44,19 @@ public class KitchenController {
     @Autowired
 	 private RegisterKitchenService registerKitchenService; 
 
+//    @GetMapping
+//    public List<KitchenDTO> list(){
+//        return kitchenMapper.toCollectionDTO(registerKitchenService.findAll());
+//    }
+
     @GetMapping
-    public List<KitchenDTO> list(){
-        return kitchenMapper.toCollectionDTO(registerKitchenService.findAll());
+    public Page<KitchenDTO> list(@PageableDefault(size = 10) Pageable pageable){
+        Page<Kitchen> kitchenPage = kitchenRepository.findAll(pageable);
+
+        List<KitchenDTO> kitchenDTOS = kitchenMapper.toCollectionDTO(kitchenPage.getContent());
+        Page<KitchenDTO> kitchenDTOPage = new PageImpl<>(kitchenDTOS, pageable,
+                            kitchenPage.getTotalElements());
+        return kitchenDTOPage;
     }
 
     @GetMapping(produces = MediaType.APPLICATION_XML_VALUE)

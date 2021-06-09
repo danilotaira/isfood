@@ -14,6 +14,10 @@ import com.isfood.domain.service.IssueOrderService;
 import com.isfood.domain.service.RegisterOrderService;
 import com.isfood.infrastructure.repository.spec.OrderSpecs;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,10 +41,14 @@ public class OrderController {
     private IssueOrderService issueOrderService;
 
     @GetMapping
-    public List<OrderCustomerResumeDTO> search(OrderFilter orderFilter) {
-        List<OrderCustomer> found = registerOrderService.findAll(OrderSpecs.usingFilter(orderFilter));
+    public Page<OrderCustomerResumeDTO> search(OrderFilter orderFilter,
+                                               @PageableDefault(size = 10) Pageable pageable) {
+        Page<OrderCustomer> orderCustomers = registerOrderService.findAll(OrderSpecs.usingFilter(orderFilter), pageable);
 
-        return orderCustomerResumeMapper.toCollectionDTO(found);
+        List<OrderCustomerResumeDTO> dtoList = orderCustomerResumeMapper.toCollectionDTO(orderCustomers.getContent());
+        PageImpl<OrderCustomerResumeDTO> orderCustomerResumeDTOS = new PageImpl<>(dtoList, pageable, orderCustomers.getTotalElements());
+
+        return orderCustomerResumeDTOS;
     }
 
 //    @GetMapping

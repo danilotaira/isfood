@@ -13,8 +13,10 @@ import java.util.List;
 public class OrderSpecs {
     public static Specification<OrderCustomer> usingFilter(OrderFilter orderFilter){
         return (root, criteriaQuery, builder) -> {
-            root.fetch("restaurant").fetch("kitchen");
-            root.fetch("userAccess");
+            if(OrderCustomer.class.equals(criteriaQuery.getResultType())){
+                root.fetch("restaurant").fetch("kitchen");
+                root.fetch("userAccess");
+            }
 
             List<Predicate> predicates = new ArrayList<>();
 
