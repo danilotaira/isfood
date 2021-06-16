@@ -5,6 +5,7 @@ import com.isfood.api.mapper.OrderCustomerResumeMapper;
 import com.isfood.api.model.OrderCustomerDTO;
 import com.isfood.api.model.OrderCustomerResumeDTO;
 import com.isfood.api.model.input.OrderCustomerInput;
+import com.isfood.core.data.PageableTranslator;
 import com.isfood.domain.entity.OrderCustomer;
 import com.isfood.domain.entity.UserAccess;
 import com.isfood.domain.exception.ControllerException;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/order")
@@ -43,12 +45,23 @@ public class OrderController {
     @GetMapping
     public Page<OrderCustomerResumeDTO> search(OrderFilter orderFilter,
                                                @PageableDefault(size = 10) Pageable pageable) {
+        pageable = translatePageable(pageable);
         Page<OrderCustomer> orderCustomers = registerOrderService.findAll(OrderSpecs.usingFilter(orderFilter), pageable);
 
         List<OrderCustomerResumeDTO> dtoList = orderCustomerResumeMapper.toCollectionDTO(orderCustomers.getContent());
         PageImpl<OrderCustomerResumeDTO> orderCustomerResumeDTOS = new PageImpl<>(dtoList, pageable, orderCustomers.getTotalElements());
 
         return orderCustomerResumeDTOS;
+    }
+
+    private Pageable translatePageable(Pageable pageable){
+        Map<String, String> translater = Map.of(
+                "uuid", "uuid",
+                "userName", "userAccess.name",
+                "subtotal","subtotal"
+        );
+
+        return PageableTranslator.translate(pageable, translater);
     }
 
 //    @GetMapping

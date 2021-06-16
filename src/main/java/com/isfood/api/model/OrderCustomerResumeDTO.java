@@ -23,5 +23,6 @@ public class OrderCustomerResumeDTO {
     private BigDecimal grandTotal;
     private OffsetDateTime dateCreated;
     private RestaurantResumeDTO restaurant;
-    private UserAccessDTO userAccess;
+//    private UserAccessDTO userAccess;
+    private String userName;
 }
