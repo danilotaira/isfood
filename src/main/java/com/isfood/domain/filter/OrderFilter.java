@@ -1,4 +1,4 @@
-package com.isfood.domain.repository.filter;
+package com.isfood.domain.filter;
 
 import lombok.Getter;
 import lombok.Setter;

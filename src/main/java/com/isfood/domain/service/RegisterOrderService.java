@@ -4,7 +4,6 @@ import com.isfood.domain.entity.OrderCustomer;
 import com.isfood.domain.exception.EntityInUseException;
 import com.isfood.domain.exception.OrderCustomerNotFoundException;
 import com.isfood.domain.repository.OrderRepository;
-import com.isfood.domain.repository.filter.OrderFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;

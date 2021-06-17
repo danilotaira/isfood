@@ -2,11 +2,9 @@ package com.isfood.infrastructure.repository.spec;
 
 import javax.persistence.criteria.Predicate;
 import com.isfood.domain.entity.OrderCustomer;
-import com.isfood.domain.entity.Restaurant;
-import com.isfood.domain.repository.filter.OrderFilter;
+import com.isfood.domain.filter.OrderFilter;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 

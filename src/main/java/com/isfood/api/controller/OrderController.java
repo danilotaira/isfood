@@ -10,7 +10,7 @@ import com.isfood.domain.entity.OrderCustomer;
 import com.isfood.domain.entity.UserAccess;
 import com.isfood.domain.exception.ControllerException;
 import com.isfood.domain.exception.EntityNotFoundException;
-import com.isfood.domain.repository.filter.OrderFilter;
+import com.isfood.domain.filter.OrderFilter;
 import com.isfood.domain.service.IssueOrderService;
 import com.isfood.domain.service.RegisterOrderService;
 import com.isfood.infrastructure.repository.spec.OrderSpecs;
@@ -58,7 +58,8 @@ public class OrderController {
         Map<String, String> translater = Map.of(
                 "uuid", "uuid",
                 "userName", "userAccess.name",
-                "subtotal","subtotal"
+                "subtotal","subtotal",
+                "grandTotal", "grandTotal"
         );
 
         return PageableTranslator.translate(pageable, translater);

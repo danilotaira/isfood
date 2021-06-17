@@ -109,7 +109,7 @@ restaurant_id, form_of_payment_id, user_access_id, uuid) values (
 'DELIVERED',
 2, '03518-040', '1 andar', 'vila euthalia', 2, 'rua coronel peroba',
 230.00, 10.00, 240.00,
-current_timestamp, current_timestamp, null, current_timestamp,
+'2021-06-05 2:00:00', current_timestamp, null, current_timestamp,
 1, 1, 2, 'de801dbe-5b47-4e4b-bb11-56c80b9bd272'
 );
 
@@ -121,7 +121,7 @@ restaurant_id, form_of_payment_id, user_access_id, uuid) values (
 'DELIVERED',
 2, '00000-000', '', 'Vila Bizu', 2, 'Franciso de Paula',
 360.00, 160.00, 200.00,
-'2021-06-05 14:00:00 -03:00', current_timestamp, null, current_timestamp,
+'2021-06-05 14:00:00', current_timestamp, null, current_timestamp,
 2, 3, 2, 'de801dbe-5b47-4e4b-bb11-56c80b9bd271'
 );
 
