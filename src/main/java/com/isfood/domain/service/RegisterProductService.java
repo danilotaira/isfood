@@ -4,7 +4,7 @@ import com.isfood.domain.entity.Product;
 import com.isfood.domain.entity.Restaurant;
 import com.isfood.domain.exception.EntityInUseException;
 import com.isfood.domain.exception.ProductNotFoundException;
-import com.isfood.domain.repository.ProdutctRepository;
+import com.isfood.domain.repository.ProductRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -20,31 +20,30 @@ public class RegisterProductService {
 
     public static final String MSG_PRODUCT_IN_USE =
             "Product with code: %d cannot be removed, because it is in use.";
-
-    private ProdutctRepository produtctRepository;
+    private ProductRepository productRepository;
 
     public List<Product> findByRestaurant (Restaurant restaurant){
-        return produtctRepository.findByRestaurant(restaurant);
+        return productRepository.findByRestaurant(restaurant);
     }
 
     public List<Product> findActivesByRestaurant (Restaurant restaurant){
-        return produtctRepository.findActivesByRestaurant(restaurant);
+        return productRepository.findActivesByRestaurant(restaurant);
     }
     
     public List<Product> findAll(){
-    	return produtctRepository.findAll();
+    	return productRepository.findAll();
     }
         
 
     public Product save(Product product){
-        return produtctRepository.save(product);
+        return productRepository.save(product);
     }
 
     @Transactional
     public void delete(Long restaurantId, Long productId){
         try {
-            produtctRepository.deleteById(productId);
-            produtctRepository.flush();
+            productRepository.deleteById(productId);
+            productRepository.flush();
         }catch (EmptyResultDataAccessException e) {
             throw new ProductNotFoundException(restaurantId, productId);
 
@@ -55,7 +54,7 @@ public class RegisterProductService {
     }
 
     public Product findOrFail(Long restaurantId, Long productId){
-        return produtctRepository.findById(restaurantId, productId)
+        return productRepository.findById(restaurantId, productId)
                 .orElseThrow(() -> new ProductNotFoundException(restaurantId, productId));
     }
 }

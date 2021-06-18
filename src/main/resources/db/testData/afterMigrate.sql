@@ -14,6 +14,7 @@ delete from user_access_group_accesses;
 delete from order_customer;
 delete from item_order  ;
 delete from restaurant_user_responsible  ;
+delete from photo_product  ;
 
 
 insert into kitchen (id, name) values (1, 'Tailandesa');
