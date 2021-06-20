@@ -1,5 +1,6 @@
 package com.isfood.infrastructure.repository.service.report;
 
+import com.isfood.domain.entity.dto.DailySale;
 import com.isfood.domain.filter.DailySaleFilter;
 import com.isfood.domain.service.SaleQueryService;
 import com.isfood.domain.service.SaleReportService;
@@ -11,7 +12,9 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 @Service
@@ -22,14 +25,14 @@ public class PdfSaleReportService implements SaleReportService {
     @Override
     public byte[] emmitDailySales(DailySaleFilter filter, String timeOffset){
         try {
-            var inputStream = this.getClass().getResourceAsStream(
+            InputStream inputStream = this.getClass().getResourceAsStream(
                                                 "/relatorios/vendas-diarias.jasper");
 
-            var parametros = new HashMap<String, Object>();
+            HashMap<String, Object> parametros = new HashMap<>();
             parametros.put("REPORT_LOCALE", new Locale("pt","BR"));
 
-            var dailySales = saleQueryService.consultDailySales(filter, timeOffset);
-            var dataSource = new JRBeanCollectionDataSource(dailySales);
+            List<DailySale> dailySales = saleQueryService.consultDailySales(filter, timeOffset);
+            JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(dailySales);
             JasperPrint jasperPrint = null;
 
             jasperPrint = JasperFillManager.fillReport(inputStream, parametros, dataSource);

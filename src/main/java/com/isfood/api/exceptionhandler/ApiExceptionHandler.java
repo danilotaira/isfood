@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.isfood.infrastructure.repository.service.storage.StorageException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -19,11 +20,13 @@ import org.springframework.lang.Nullable;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -63,9 +66,28 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 	}
 
 	@Override
+	protected ResponseEntity<Object> handleHttpMediaTypeNotAcceptable(HttpMediaTypeNotAcceptableException ex, HttpHeaders headers,
+																	  HttpStatus status, WebRequest request) {
+		return ResponseEntity.status(status).headers(headers).build();
+	}
+
+	@Override
 	protected ResponseEntity<Object> handleBindException(BindException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
 		return handleValidationInternal(ex, ex.getBindingResult(), new HttpHeaders(),
 				HttpStatus.BAD_REQUEST, request);
+	}
+
+	@ExceptionHandler( ResponseStatusException.class )
+	public ResponseEntity<?> handleStatusException(ResponseStatusException ex, WebRequest request ) {
+
+		HttpStatus status = ex.getStatus();
+		ProblemType problemType = ProblemType.RECURSE_NOT_FOUND;
+		String detail = ex.getMessage();
+
+		Problem problem = createProblemBuilder(status, problemType, detail, ex.getReason()).build();
+//		Problem problem = createProblemBuilder(status, problemType, detail, MSG_GENERIC_FINAL_USER).build();
+
+		return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
 	}
 
 	@ExceptionHandler( EntityNotFoundException.class )
@@ -174,7 +196,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 				.map(objectError -> { 
 					String message = messages_pt_BR.getMessage(objectError, LocaleContextHolder.getLocale());
 				
-					var name = objectError.getObjectName();
+					String name = objectError.getObjectName();
 					
 					if (objectError instanceof FieldError) {
 						name = ((FieldError) objectError).getField();

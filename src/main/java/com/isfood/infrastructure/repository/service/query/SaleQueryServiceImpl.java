@@ -11,10 +11,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
@@ -48,20 +45,20 @@ public class SaleQueryServiceImpl implements SaleQueryService {
 //                OffsetDateTime.class,
 //                criteriaBuilder.literal("+00:00"),
 //                root.get("dateCreated"));
-        var functionConvertTzDataCriacao = criteriaBuilder.function(
+        Expression<Date> functionConvertTzDataCriacao = criteriaBuilder.function(
                 "date_trunc", Date.class, root.get("dateCreated"),
                 criteriaBuilder.literal(timeOffset));
 
-        var functionDateCreation = criteriaBuilder.function("TO_CHAR", String.class,
+        Expression<String> functionDateCreation = criteriaBuilder.function("TO_CHAR", String.class,
                 functionConvertTzDataCriacao,
                 criteriaBuilder.literal("yyyy-MM-dd"));
 
-        var selection = criteriaBuilder.construct(DailySale.class,
+        CompoundSelection<DailySale> selection = criteriaBuilder.construct(DailySale.class,
                 functionDateCreation,
                 criteriaBuilder.count(root.get("id")),
                 criteriaBuilder.sum(root.get("grandTotal")));
 
-        var predicates = new ArrayList<Predicate>();
+        ArrayList<Predicate> predicates = new ArrayList<>();
 
         if (filter.getRestaurantId() != null) {
             predicates.add(criteriaBuilder.equal(root.get("restaurant"), filter.getRestaurantId()));

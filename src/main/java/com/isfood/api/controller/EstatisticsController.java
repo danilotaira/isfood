@@ -37,7 +37,7 @@ public class EstatisticsController {
                                                        @RequestParam(required = false, defaultValue = "+00:00")String timeOffset){
         byte[] bytesPdf = saleReportService.emmitDailySales(filter, timeOffset);
 
-        var headers = new HttpHeaders();
+        HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=vendas-diarias.pdf");
 
         return ResponseEntity.ok()

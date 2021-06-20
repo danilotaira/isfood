@@ -19,10 +19,10 @@ public class MultipleValidator implements ConstraintValidator<Multiple, Number>{
 		
 		boolean valid = true;
 		if (value != null )	{
-			var valueDecimal = BigDecimal.valueOf(value.doubleValue());
-			var mutipleDecimal = BigDecimal.valueOf(this.numberMutiple);
-			var remainder = valueDecimal.remainder(mutipleDecimal);
-			
+			BigDecimal valueDecimal = BigDecimal.valueOf(value.doubleValue());
+			BigDecimal mutipleDecimal = BigDecimal.valueOf(this.numberMutiple);
+			BigDecimal remainder = valueDecimal.remainder(mutipleDecimal);
+
 			valid = BigDecimal.ZERO.compareTo(remainder) == 0;
 		}
 		

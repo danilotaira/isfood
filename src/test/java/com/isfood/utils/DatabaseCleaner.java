@@ -76,9 +76,9 @@ public class DatabaseCleaner {
 
 	private Statement buildSqlStatement(List<String> tableNames) throws SQLException {
 		Statement statement = connection.createStatement();
-			
 
-		var nameDB = statement.getConnection().getMetaData().getDatabaseProductName();
+
+		String nameDB = statement.getConnection().getMetaData().getDatabaseProductName();
 		if(nameDB.toLowerCase().equals("postgresql")){
 			statement.addBatch(sql("SET session_replication_role = 'replica'"));
 			addTruncateSatements(tableNames, statement);

@@ -15,7 +15,7 @@ public class ModelMapperConfig {
 
 	@Bean
 	public ModelMapper modelMapper() {
-		var modelMapper = new ModelMapper(); 
+		ModelMapper modelMapper = new ModelMapper();
 //		modelMapper.createTypeMap(Restaurant.class, RestaurantDTO.class)
 //			.addMapping(Restaurant::getTaxShipping, RestaurantDTO::setPrecoShipping);
 		

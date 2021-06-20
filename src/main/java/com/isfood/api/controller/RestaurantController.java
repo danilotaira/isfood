@@ -157,7 +157,7 @@ public class RestaurantController {
                             @RequestBody @Valid Map<String, Object> fields, HttpServletRequest request) {
     	
         Optional<Restaurant> restaurantActual = restaurantRepository.findById(restaurantId);
-        if(restaurantActual.isEmpty()){
+        if(!restaurantActual.isPresent()){
             return ResponseEntity.notFound().build();
         }
         merge(fields, restaurantActual.get(), request);

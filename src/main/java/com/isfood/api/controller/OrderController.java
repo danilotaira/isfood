@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping(value = "/order")
@@ -55,12 +57,12 @@ public class OrderController {
     }
 
     private Pageable translatePageable(Pageable pageable){
-        Map<String, String> translater = Map.of(
-                "uuid", "uuid",
-                "userName", "userAccess.name",
-                "subtotal","subtotal",
-                "grandTotal", "grandTotal"
-        );
+        Map<String, String> translater = Stream.of(new String[][] {
+                {"uuid", "uuid" },
+                {"userName", "userAccess.name"},
+                {"subtotal","subtotal"},
+                {"grandTotal", "grandTotal"}
+        }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
 
         return PageableTranslator.translate(pageable, translater);
     }
